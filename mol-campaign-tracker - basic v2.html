@@ -1,0 +1,3259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mother of Learning - Campaign Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .loop-info {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .character-info h2, .skills-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .info-row label {
+            font-weight: bold;
+            min-width: 100px;
+            color: #555;
+        }
+
+        .info-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .info-row input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .health-bar {
+            margin-top: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .health-fill {
+            background: linear-gradient(90deg, #ff6b6b, #ff8787);
+            height: 100%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .mana-display {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 15px;
+        }
+
+        .skill-domain {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .domain-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .domain-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .skill-level {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .skill-item, .sub-skill {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .sub-skill {
+            margin-left: 20px;
+            border-left: 3px solid #764ba2;
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .skill-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        .add-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            margin: 5px;
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .xp-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .modal input, .modal select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cancel-button {
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .loop-training {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #667eea;
+        }
+
+        .loop-training h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .training-slot {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .training-slot select {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+        }
+
+        .delete-button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .tier-info {
+            font-size: 0.8em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .skill-browser {
+            margin: 20px 0;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .skill-category {
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            background: #667eea;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .skill-list-item {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+            transition: background 0.2s;
+        }
+
+        .skill-list-item:hover {
+            background: #f0f0f0;
+        }
+
+        .skill-details {
+            flex: 1;
+        }
+
+        .skill-name-browse {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .skill-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .add-skill-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .skill-type-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .non-magical {
+            border-left-color: #9e9e9e !important;
+        }
+
+        .alchemy-domain {
+            border-left-color: #ff9800 !important;
+        }
+
+        .weapon-domain {
+            border-left-color: #8b4513 !important;
+        }
+
+        /* Custom skill styling */
+        .illegal-domain {
+            border-left-color: #dc3545 !important;
+            background-color: #fff5f5 !important;
+        }
+
+        .custom-skill-indicator {
+            display: inline-block;
+            background: #17a2b8;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            margin-left: 5px;
+        }
+
+        .illegal-skill-indicator {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            margin-left: 5px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .weapon-selector {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            align-items: center;
+        }
+
+        .weapon-selector label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .weapon-selector select {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+        }
+
+        .applicable-weapons {
+            font-size: 0.85em;
+            color: #666;
+            font-style: italic;
+            margin-top: 3px;
+        }
+
+        .shared-skill-indicator {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            margin-left: 5px;
+        }
+
+        /* Skill description info icon */
+        .skill-info-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #667eea;
+            color: white;
+            font-size: 10px;
+            margin-left: 4px;
+            cursor: pointer;
+            vertical-align: middle;
+            transition: background-color 0.2s;
+        }
+
+        .skill-info-icon:hover {
+            background-color: #556cd6;
+            transform: scale(1.1);
+        }
+
+        /* Skill description content styling */
+        .skill-description-content {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .skill-description-content h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .skill-description-content .description-text {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .skill-description-content .mechanics-section {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .skill-description-content .mechanics-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .skill-description-content .mechanics-item {
+            margin-bottom: 4px;
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        .skill-description-content .special-properties {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 12px;
+        }
+
+        .skill-description-content .special-properties .special-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .skill-description-content .tag-badge {
+            display: inline-block;
+            background: #17a2b8;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        .skill-description-content .illegal-badge {
+            background: #dc3545;
+        }
+
+        .skill-description-content .no-description {
+            font-style: italic;
+            color: #6c757d;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mother of Learning - Campaign Tracker</h1>
+            <div class="loop-info" id="loopInfo">Loop 4, Week 2, Day 5</div>
+        </div>
+
+        <div class="main-grid">
+            <div class="card character-info">
+                <h2>Character Information</h2>
+                
+                <div class="info-row">
+                    <label>Name:</label>
+                    <input type="text" id="characterName" placeholder="Enter character name">
+                </div>
+
+                <div class="info-row">
+                    <label>Health:</label>
+                    <input type="number" id="currentHealth" value="100" max="100" min="-40">
+                    <span>/</span>
+                    <input type="number" id="maxHealth" value="100" readonly>
+                </div>
+
+                <div class="health-bar">
+                    <div class="health-fill" id="healthBar">100%</div>
+                </div>
+
+                <div class="info-row">
+                    <label>Bloodline:</label>
+                    <input type="text" id="bloodline" placeholder="e.g., Pyromancy talent (1.5x progress, 2x sub-skills)">
+                </div>
+
+                <div class="info-row">
+                    <label>Character:</label>
+                    <div style="display: flex; gap: 10px; flex: 1; flex-wrap: wrap;">
+                        <button class="add-button" onclick="createNewCharacter()" style="margin: 0; padding: 8px 16px; background: #17a2b8;">New Character</button>
+                        <button class="add-button" onclick="saveCharacterToFile()" style="margin: 0; padding: 8px 16px;">Save Character</button>
+                        <button class="add-button" onclick="showLoadCharacterModal()" style="margin: 0; padding: 8px 16px;">Load Character</button>
+                        <button class="add-button" onclick="exportCharacterJSON()" style="margin: 0; padding: 8px 16px; background: #28a745;">Export JSON</button>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <label></label>
+                    <div style="font-size: 0.8em; color: #666; font-style: italic;" id="autoSaveStatus">
+                        Auto-saves every 30 seconds
+                    </div>
+                </div>
+
+                <div class="mana-display">
+                    <div>Mana: <span id="currentMana">0</span> / <span id="maxMana">0</span></div>
+                    <div style="font-size: 0.8em; margin-top: 5px;">Regeneration: <span id="manaRegen">0</span>/hour (Cyoria)</div>
+                </div>
+
+                <div class="loop-training">
+                    <h3>Loop Training Progress</h3>
+                    <div class="training-slot">
+                        <label>Primary (8 XP):</label>
+                        <select id="training1"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Secondary (5 XP):</label>
+                        <select id="training2"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Tertiary 1 (3 XP):</label>
+                        <select id="training3"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Tertiary 2 (3 XP):</label>
+                        <select id="training4"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Tertiary 3 (3 XP):</label>
+                        <select id="training5"></select>
+                    </div>
+                    <button class="add-button" onclick="applyLoopTraining()">Apply Loop Training</button>
+                </div>
+
+                <!-- Undo System Section -->
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #856404;">Recent Actions</strong>
+                            <div id="lastActionText" style="font-size: 0.8em; color: #856404; margin-top: 3px;">
+                                No recent actions
+                            </div>
+                        </div>
+                        <button id="undoButton" class="add-button" onclick="undoLastAction()" 
+                                style="background: #ffc107; color: #212529; margin: 0; padding: 6px 12px;" disabled>
+                            Undo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card skills-section">
+                <h2>Skills & Spells</h2>
+                
+                <div class="button-group">
+                    <button class="add-button" onclick="showSkillBrowser()">Browse & Add Skills</button>
+                    <button class="add-button" onclick="showAddCustomSkill()">Create Custom Skill</button>
+                </div>
+
+                <div id="skillsList"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Knowledge & Notes</h2>
+            <textarea id="knowledge" style="width: 100%; height: 150px; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;" placeholder="Enter character knowledge, backstory notes, and campaign information here..."></textarea>
+        </div>
+    </div>
+
+    <!-- Skill Browser Modal -->
+    <div id="skillBrowserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Browse Skills & Spells</div>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('magical')">Magical</button>
+                <button class="tab" onclick="switchTab('combat')">Combat & Weapons</button>
+                <button class="tab" onclick="switchTab('general')">General Skills</button>
+            </div>
+            
+            <input type="text" class="search-box" id="skillSearch" placeholder="Search for skills, spells, or domains...">
+            
+            <div class="tab-content active" id="magical-tab">
+                <div id="magicalSkillsContent"></div>
+            </div>
+            
+            <div class="tab-content" id="combat-tab">
+                <div class="weapon-selector">
+                    <label>Select Weapon Type:</label>
+                    <select id="weaponTypeSelector" onchange="filterCombatSkills()">
+                        <option value="">All Weapons & Combat Skills</option>
+                    </select>
+                </div>
+                <div id="combatSkillsContent"></div>
+            </div>
+            
+            <div class="tab-content" id="general-tab">
+                <div id="generalSkillsContent"></div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeSkillBrowser()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Custom Skill Modal -->
+    <!-- Enhanced Add Custom Skill Modal -->
+    <div id="addSkillModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">Create Custom Skill</div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Skill Name:</label>
+                <input type="text" id="newSkillName" placeholder="Enter skill name" style="width: 100%;">
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Starting Level:</label>
+                    <input type="number" id="newSkillLevel" placeholder="Level" min="-3" max="10" value="0" step="1" style="width: 100%;">
+                    <div style="font-size: 0.8em; color: #666; margin-top: 3px;">Range: -3 to 10</div>
+                </div>
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Starting XP:</label>
+                    <input type="number" id="newSkillXP" placeholder="XP" min="0" value="0" step="0.01" style="width: 100%;">
+                    <div style="font-size: 0.8em; color: #666; margin-top: 3px;">Supports decimals</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Skill Type:</label>
+                <select id="skillType" style="width: 100%;">
+                    <optgroup label="Magical">
+                        <option value="domain">Magical Domain</option>
+                        <option value="spell">Spell/Sub-skill</option>
+                    </optgroup>
+                    <optgroup label="Illegal Magical">
+                        <option value="illegal-domain">Illegal Domain</option>
+                        <option value="illegal-spell">Illegal Spell</option>
+                    </optgroup>
+                    <optgroup label="Non-Magical">
+                        <option value="alchemy-skill">Alchemy Recipe</option>
+                        <option value="skill">General Skill</option>
+                    </optgroup>
+                    <optgroup label="Combat">
+                        <option value="weapon">Weapon Proficiency</option>
+                        <option value="combat">Combat Technique</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div id="parentSelectionDiv" style="margin-bottom: 15px; display: none;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Parent Skill:</label>
+                <select id="parentDomain" style="width: 100%;">
+                    <option value="">No Parent (Top-level)</option>
+                </select>
+                <div style="font-size: 0.8em; color: #666; margin-top: 3px;">
+                    Select the domain or weapon this skill belongs to
+                </div>
+            </div>
+
+            <div id="skillDescription" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Description (Optional):</label>
+                <textarea id="newSkillDescription" placeholder="Enter skill description..." 
+                          style="width: 100%; height: 60px; resize: vertical; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-family: inherit;"></textarea>
+            </div>
+
+            <div id="skillTags" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Special Properties (Optional):</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="isReaction" style="width: auto; margin: 0;"> Reaction Skill
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="isChanneled" style="width: auto; margin: 0;"> Channeled Spell
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="isNegative" style="width: auto; margin: 0;"> Negative Skill
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeCustomSkillModal()">Cancel</button>
+                <button class="add-button" onclick="createCustomSkill()">Create Skill</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add XP Modal -->
+    <div id="addXPModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Add Skill Progress</div>
+            <div id="xpSkillInfo"></div>
+            <input type="number" id="xpAmount" placeholder="XP Amount" min="0" step="0.01" style="text-align: center;">
+            <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                Supports decimal values (e.g., 2.5, 1.75, 3.33)
+            </div>
+            <div id="shapingBonus" style="display: none; color: #667eea; margin: 10px 0;"></div>
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeXPModal()">Cancel</button>
+                <button class="add-button" onclick="applyXP()">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Character Modal -->
+    <div id="loadCharacterModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">Load Character</div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #667eea; margin-bottom: 10px;">Saved Characters</h4>
+                <div id="savedCharactersList" style="max-height: 200px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px; background-color: #f9f9f9;">
+                    <!-- Saved characters will be populated here -->
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #667eea; margin-bottom: 10px;">Import from File</h4>
+                <input type="file" id="characterFileInput" accept=".json" style="margin-bottom: 10px; width: 100%;">
+                <div style="font-size: 0.8em; color: #666;">Select a previously exported character JSON file</div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeLoadCharacterModal()">Cancel</button>
+                <button class="add-button" onclick="loadCharacterFromFile()">Load from File</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Description Modal -->
+    <div id="skillDescriptionModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header" id="skillDescriptionTitle">Skill Description</div>
+            <div id="skillDescriptionContent" style="max-height: 400px; overflow-y: auto; line-height: 1.6;">
+                <!-- Description content will be populated by JavaScript -->
+            </div>
+            <div class="modal-buttons">
+                <button class="add-button" onclick="closeSkillDescriptionModal()" style="width: 100%;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Skill database from the document
+        const skillDatabase = {
+            // Complete Magical Domains from MOL Dossier
+            domains: {
+                // Free Starting Skills
+                shaping: { name: 'Shaping', defaultLevel: 2, description: 'The ability to shape mana, a key element of magical practice', magical: true, free: true },
+                conjuration: { name: 'Conjuration', defaultLevel: 1, description: 'Creating ectoplasm and force constructs', magical: true, free: true },
+                negation: { name: 'Negation', defaultLevel: 1, description: 'The art of countering spells', magical: true, free: true },
+                
+                // Core Magical Domains
+                alteration: { name: 'Alteration', defaultLevel: -1, description: 'Shifting the form of objects and terrain', magical: true },
+                animation: { name: 'Animation', defaultLevel: 0, description: 'Animating objects by imbuing them with the casters will', magical: true },
+                cryomancy: { name: 'Cryomancy', defaultLevel: 0, description: 'Sub-domain of alteration specializing in ice magic', magical: true },
+                divination: { name: 'Divination', defaultLevel: -1, description: 'Information gathering magic, difficult but not mana intensive', magical: true },
+                electromancy: { name: 'Electromancy', defaultLevel: 0, description: 'Sub-domain of Projection concerning electric energy', magical: true },
+                enhancement: { name: 'Enhancement', defaultLevel: 0, description: 'Temporarily enhancing ones own body', magical: true },
+                golemancy: { name: 'Golemancy', defaultLevel: -1, description: 'Creating mindless golems (requires Animation 3, Spell Formula 5)', magical: true },
+                illusion: { name: 'Illusion', defaultLevel: 0, description: 'Creating illusions', magical: true },
+                medicalMagic: { name: 'Medical Magic', defaultLevel: -1, description: 'Nascent field created after the Silence for diagnosis and treatment', magical: true },
+                mentalDefense: { name: 'Mental Defense', defaultLevel: -1, description: 'Protection of the mind from outside influence', magical: true },
+                projection: { name: 'Projection', defaultLevel: 0, description: 'Creating light, sound, heat, and electricity', magical: true },
+                pyromancy: { name: 'Pyromancy', defaultLevel: 0, description: 'Summoning and controlling fire, sub-domain of Projection', magical: true },
+                spatialMagic: { name: 'Spatial Magic', defaultLevel: -3, description: 'Manipulation of space and dimensions', magical: true },
+                spellFormula: { name: 'Spell Formula', defaultLevel: -2, description: 'Inscribing spells into objects; enchanting', magical: true },
+                warding: { name: 'Warding', defaultLevel: -1, description: 'Creating permanent or semi-permanent defenses in fixed locations', magical: true },
+                
+                // Illegal Magical Domains
+                bloodMagic: { name: 'Blood Magic', defaultLevel: -1, description: 'Illegal manipulation of life force', magical: true, illegal: true },
+                mindMagic: { name: 'Mind Magic', defaultLevel: -2, description: 'Illegal manipulation of minds', magical: true, illegal: true },
+                necromancy: { name: 'Necromancy', defaultLevel: -1, description: 'Illegal reanimation of corpses', magical: true, illegal: true },
+                soulMagic: { name: 'Soul Magic', defaultLevel: -3, description: 'Illegal sensing and manipulating souls', magical: true, illegal: true },
+                
+                // Non-Magical Domain
+                alchemy: { name: 'Alchemy', defaultLevel: 0, description: 'Field of magic requiring no shaping skills, involving potion creation', magical: false, alchemical: true }
+            },
+            
+            // Complete Spells Database from MOL Dossier
+            spells: {
+                // Free Starting Spells
+                conjuration: [
+                    { name: 'Magic Missile', defaultLevel: 0, description: 'A basic damaging bolt of magical force. Mana Cost: 4+2 per Level. Cast Time: 50-5 per Tier TU (min 5). Range: 60+10 per Level feet. Damage: 15+7.5 per Level Blunt', free: true },
+                    { name: 'Force Shield', defaultLevel: 0, description: 'Transparent shield of magical force. Reaction. Mana Cost: 1-0.05 per Level per damage blocked (min 0.05). Max damage blocked: 10 per Level' },
+                    { name: 'Aegis', defaultLevel: -1, description: 'Full dome shield of magical force. Channeled. Requires Conjuration Level 5. Mana Cost: 0.85-0.1 per Level per damage blocked (min 0.03). Cast Time: 50-10 per Tier TU (min 3). Range: 5+5 per Tier feet. Radius: max 2.5 per Tier feet' },
+                    { name: 'Floating Disc', defaultLevel: 0, description: 'Simple plane of force to carry weight. Channeled. Mana Cost: 20/Hour. Cast Time: 200 TU. Range: 5 feet. Carry: 100+75 per Tier pounds. Speed: 4+3 per Tier. Radius: 3+1 per Tier feet (max 8)' },
+                    { name: 'Force Lance', defaultLevel: -1, description: 'Powerful piercing force attack. Mana Cost: 15+5 per Level. Cast Time: 80-8 per Tier TU (min 8). Range: 100+15 per Level feet. Damage: 30+15 per Level Piercing. Special: Reduces Force Shield/Aegis Level by 2+1 per Tier' },
+                    { name: 'Force Whip', defaultLevel: 0, description: 'Conjured whips of magical force. Channeled. Takes 3 Channel slots. Mana Cost: 17+8 per Tier. Cast Time: 80-8 per Tier. Range: 10 feet. Damage: 16+7 per Level (slashing/piercing/blunt choice). Attack every 40-2 per Tier TU' },
+                    { name: 'Simulacrum', defaultLevel: -1, description: 'Create autonomous copy sharing soul and mana. Channeled. Requires Soul Magic Level 3. Mana Cost: 25/Hour. Cast Time: 600 TU. Range: 5 feet' },
+                    { name: 'Static Force Shield', defaultLevel: 0, description: 'Force Shield variant with initial mana investment instead of ongoing cost. Acts as Enhancer for Force Shield Checks equal to or less than this Skills Level' }
+                ],
+                negation: [
+                    { name: 'Basic Dispelling Wave', defaultLevel: 0, description: 'Projects disruptive magic wave. Mana Cost: 10+5 per Level. Cast Time: 50-10 per Tier TU (min 10). Cone: 10+5 per Tier feet long, 5+2.5 per Tier feet wide. Non-channeled spells use only spell Level to resist' },
+                    { name: 'Targeted Dispel', defaultLevel: -2, description: 'Disrupt casting of specific spell. Mana Cost: 40% of target spell cost+2 per Tier. Cast Time: 50-10 per Tier TU (min 5). Range: 30+10 per Level feet. Must complete at most 5 TU before target spell. Contested Check' }
+                ],
+                
+                // Alteration Spells
+                alteration: [
+                    { name: 'Create Mud Men', defaultLevel: 0, description: 'Create and control mud people. Channeled, Vulnerable. Requires Alteration Level 3, Animation Level 4. Mana Cost: 10 per mud man. Cast Time: 100+50 per additional TU-10 per Level (min 15). Range: 10 feet. Max: 1 per Tier. Possess all users unarmed Skills' },
+                    { name: 'Instant Pit', defaultLevel: 0, description: 'Creates pit in earth. Mana Cost: 5. Cast Time: 20-2 per Level TU (min 2). Range: 30+10 per Tier feet' },
+                    { name: 'Raise Earthen Bindings', defaultLevel: 0, description: 'Earth rises to entangle enemies. Mana Cost: 8+3 per Level per binding. Cast Time: 30-4 per Tier TU (min 4)+15-2 per Tier per extra binding (min 2). Range: 50+15 per Level feet. Bind 1 per Tier. Binding Health: 15+5 per Level. Armor: 8+2 per Tier True, 10 Lightning' },
+                    { name: 'Raise Earthen Spears', defaultLevel: 0, description: 'Earth spears up at enemies. Mana Cost: 5+2.25 per Level per spear. Cast Time: 100-8 per Tier TU (min 10). Range: 30+5 per Level feet. Create 1 per Tier. Damage: 18+4 per Level Piercing, 8+2.5 per Level Blunt per spear' },
+                    { name: 'Raise Earthen Wall', defaultLevel: 0, description: 'Creates wall of dirt and stone. Cast Time: 80-10 per Tier TU (min 8). Range: 30+5 per Level feet. Dimensions: 5+3 per Tier width, 10+5 per Level length, 10+2 per Level height. Health per 5ft segment: 50+15 per Level. Armor: 12+3 per Tier True, 10 Lightning' }
+                ],
+                
+                // Animation Spells
+                animation: [
+                    { name: 'Homing Magic Missile', defaultLevel: 0, description: 'Magic Missile variation with homing effect. Acts as Enhancer to Magic Missile Skill when making contested check' },
+                    { name: 'Puppeteer', defaultLevel: -1, description: 'Puppeteer a target. Channeled, Vulnerable. Requires Animation Level 2. Level 4 for unwilling targets. Mana Cost: 25/Hour unresisted or 25/600 TU resisted. Cast Time: 100-10 per Tier TU (min 8). Range: 10+10 per Tier feet. Target cannot cast magic, uses casters Skills' }
+                ],
+                
+                // Blood Magic Spells (Illegal)
+                bloodMagic: [
+                    { name: 'Blood for Mana', defaultLevel: -1, description: 'Convert lifeforce to mana. Extremely damaging to health. Rate: 2+0.5 per Level times Health spent. Causes damage that cannot be repaired until end of loop' },
+                    { name: 'Last Breath', defaultLevel: -1, description: 'Use lifeforce of dying/dead to cast spell. Range: 10+10 per Tier feet. Up to 2 per Tier characters dead within 5 min or at 0 Health. Each supplies 15% of max Health as mana. Living targets die. Check difficulty: 1/6 of mana supplied' }
+                ],
+                
+                // Cryomancy Spells
+                cryomancy: [
+                    { name: 'Ice Shards', defaultLevel: 0, description: 'Sharp icicles fired at enemies. Mana Cost: 2.5+1 per Level per icicle. Cast Time: 80-8 per Tier TU (min 8). Range: 40+8 per Level feet. Max icicles: 3+1 per Tier. Damage: 5+3 per Level Piercing, 3+1.5 per Level Cold. Can channel after cast' },
+                    { name: 'Create Ice Construct', defaultLevel: 0, description: 'Create simple ice construct. Mana Cost: 5 per cubic foot. Cast Time: 10-2 per Tier TU per cubic foot (min 0.5). Range: 10+5 per Tier feet. Max: 3+2 per Level cubic feet' },
+                    { name: 'Ice Lance', defaultLevel: 0, description: 'Massive sharp ice lance. Requires Cryomancy Level 3. Mana Cost: 15+5 per Level. Cast Time: 100-10 per Tier TU (min 10). Range: 50+10 per Level feet. Damage: 24+12 per Level Piercing, 8+4 per Level Cold. AP: 10+8 per Tier vs Physical' },
+                    { name: 'Ice Coffin', defaultLevel: 0, description: 'Form ice around target to freeze them. Channeled. Mana Cost: 7 per Tier per 10 TU. Cast Time: 100-10 per Tier TU (min 10). Range: 80+20 per Tier feet. Reduces Movement Speed by 0.25-0.5+0.25-0.5 per Tier initially and per 10 TU channeled' }
+                ],
+                
+                // Divination Spells
+                divination: [
+                    { name: 'Locator', defaultLevel: 0, description: 'Locate familiar people or objects. Mana Cost: 5 per Level. Cast Time: 600 TU. Radius: 1 mile per Level centered on caster' },
+                    { name: 'Past Reconstruction', defaultLevel: -1, description: 'Reconstruct immediate past of area. Mana Cost: 10 per Level. Cast Time: 2000 TU. Becomes more accurate and goes further back at higher Levels' }
+                ],
+                
+                // Electromancy Spells
+                electromancy: [
+                    { name: 'Electric Armor', defaultLevel: 0, description: 'Shroud self in electricity. Channeled. Mana Cost: 9+3 per Level per 40 TU. Cast Time: 40-6 per Tier TU. Every 10 TU: attack target within 10+5 per Tier feet for 4+1.5 per Level Electric damage. Also triggers as Reaction when attacked' },
+                    { name: 'Lightning Strike', defaultLevel: -1, description: 'Bolt of lightning. Mana Cost: 35+16 per Level. Cast Time: 110-11 per Tier TU (min 11). Range: 80+40 per Tier feet. Damage: 40+16 per Level Electric. Interrupts target by 15 TU' },
+                    { name: 'Spark', defaultLevel: 0, description: 'Bundle of electrical energy. Mana Cost: 11+3 per Level. Cast Time: 70-10 per Tier TU (min 5). Range: 25+3 per Level feet. Damage: 7+4 per Level Electric. Interrupts by 8 TU' }
+                ],
+                
+                // Enhancement Spells
+                enhancement: [
+                    { name: 'Perception Enhancement', defaultLevel: 0, description: 'Perceive supernaturally quickly. Channeled. Mana Cost: 10+6 per Level per 100 TU. Cast Time: 30-3 per Tier TU (min 3). Range: 8+8 per Tier feet. Acts as Enhancer for Reaction Checks' },
+                    { name: 'Strength Enhancement', defaultLevel: 0, description: 'Become supernaturally strong. Channeled. Mana Cost: 12+7 per Level per 100 TU. Cast Time: 40-4 per Tier TU (min 4). Range: 8+8 per Tier feet. Physical weapons +20% base damage +10% per Level. Unarmed +50% base +25% per Level' },
+                    { name: 'Swiftness Enhancement', defaultLevel: 0, description: 'Become supernaturally fast. Channeled. Mana Cost: 7+4 per Level per 100 TU. Cast Time: 20-2 per Tier TU (min 2). Range: 8+8 per Tier feet. +3-5 Movement Speed +2-4 per Level' }
+                ],
+                
+                // Golemancy Spells (Requires Animation 3, Spell Formula 5)
+                golemancy: [
+                    { name: 'Create Golem', defaultLevel: -1, description: 'Create a golem. Power varies with Level, size, and materials. Requires substantial time, mana, and resources. Combat-grade materials restricted. Uses casters physical combat Skills' }
+                ],
+                
+                // Illusion Spells
+                illusion: [
+                    { name: 'Invisibility', defaultLevel: -1, description: 'Make target invisible. Channeled. Mana Cost: 3 per Tier per 600 TU. Minor visual distortion decreases with Level. Ineffective vs smell/sound perception. Acts as Enhancer to Stealth Checks' }
+                ],
+                
+                // Medical Magic Spells
+                medicalMagic: [
+                    { name: 'Diagnose', defaultLevel: -1, description: 'Determine what ails patient. Vulnerable. Sub-Skill of both Divination and Medical Magic. Mana Cost: 20. Cast Time: 3000-400 per Level TU (min 40)' },
+                    { name: 'Heal', defaultLevel: -2, description: 'Peak of medical magic, heal superficial wounds. Requires Medical Magic Level 5. Mana Cost: 30. Cast Time: 600 TU. Range: 5 feet. Heals max 15+5 per Tier Health. Cannot use twice on same target until fully healed' },
+                    { name: 'Locate Pathogens', defaultLevel: 0, description: 'Locate disease sources nearby. Sub-Skill of both Divination and Medical Magic. Mana Cost: 10+5 per Level. Cast Time: 600 TU. Radius: 1+0.5 per Level miles' }
+                ],
+                
+                // Mental Defense Spells
+                mentalDefense: [
+                    { name: 'Mind Blank', defaultLevel: -2, description: 'Completely nullify Mind Magic influence. Channeled. Max Level 5. Requires Mental Defense Level 4. Mana Cost: 25/Hour. Cast Time: 600 TU. Auto-succeed vs Mind Magic. Causes paranoid delusions with extensive use' },
+                    { name: 'Mind Shield', defaultLevel: 0, description: 'Protect from Mind Magic. Channeled. Mana Cost: 10/Hour. Cast Time: 60-20 per Tier TU (min 5)' }
+                ],
+                
+                // Mind Magic Spells (Illegal)
+                mindMagic: [
+                    { name: 'Dominate', defaultLevel: -2, description: 'Take control of targets mind. Channeled. Mana Cost: 40/Hour per Tier. Cast Time: 6000 TU. Range: 30 feet. Humans get +5 effective Mental Defense Level. Dominated must stay within 300 feet' },
+                    { name: 'Mind Spike', defaultLevel: 0, description: 'Simple mental attack disrupting focus. Mana Cost: 9+4 per Level. Cast Time: 60-10 per Tier TU (min 8). Range: 50+10 per Level feet. Target loses 6+3 per Level focus' },
+                    { name: 'Read Memory', defaultLevel: -2, description: 'Dive into targets memories. Channeled, Vulnerable. Both user and target unconscious. Mana Cost: 60/Hour. Cast Time: 6000 TU. Range: 5 feet. Higher Levels read older memories, bypass mental defenses' },
+                    { name: 'Read Mind', defaultLevel: 0, description: 'Read surface thoughts. Channeled, Subtle. Mana Cost: 10 per 1200 TU. Cast Time: 100-30 per Tier TU. Range: 20+10 per Level feet. Lower Levels more likely to fail/alert target' },
+                    { name: 'Sleep', defaultLevel: 0, description: 'Put target to sleep. Channeled, Vulnerable. Mana Cost: 15+5 per Tier per 30 TU. Cast Time: 120-20 per Tier TU (min 10). Range: 60+20 per Level feet. Target in magical sleep cannot wake while channeled' }
+                ],
+                
+                // Projection Spells
+                projection: [
+                    { name: 'Magic Weapon', defaultLevel: 0, description: 'Coat weapon in magic, changing damage type. Channeled. Mana Cost: 0.2 per damage dealt. Cast Time: 1 TU. Increases weapon damage by 10% per Level' },
+                    { name: 'Heat Beam', defaultLevel: 0, description: 'Focused beam of extreme heat. Mana Cost: 12+4 per Level. Cast Time: 40-4 per Tier TU (min 4). Range: 5+1 per Level feet. Damage: 15+7.5 per Level Heat' }
+                ],
+                
+                // Pyromancy Spells
+                pyromancy: [
+                    { name: 'Fireball', defaultLevel: 0, description: 'Explosive fire spell. Requires Pyromancy Level 3. Mana Cost: 38+18 per Level. Cast Time: 120-12 per Tier TU (min 5). Range: 100+40 per Tier feet. Radius: 7.5+2.5 per Tier feet. Damage: 15+5 per Level Blunt, 10+5 per Level Heat' },
+                    { name: 'Firebolt', defaultLevel: 0, description: 'Simple fiery projectile. Mana Cost: 7+2 per Level. Cast Time: 50-5 per Tier TU (min 2). Range: 40+6 per Level feet. Damage: 7+5 per Level Fire' },
+                    { name: 'Flamethrower', defaultLevel: 0, description: 'Spill flame from hands. Channeled, Focused. Mana Cost: 8+4 per Level per 10 TU. Cast Time: 30-4 per Tier TU (min 3). Cone: 8+4 per Tier width, 12+6 per Tier length (2:3 ratio). Damage: 6+3 per Level Fire per 10 TU or when moving through' }
+                ],
+                
+                // Shaping Spells
+                shaping: [
+                    { name: 'Mana Field', defaultLevel: -2, description: 'Spread mana net for perception. Channeled. Mana Cost: 4+2 per Tier per 300 TU. Cast Time: 5-1 per Tier TU (min 1). Range: 10+5 per Level feet. Perceive everything in area including wards and spell effects' },
+                    { name: 'Mana Sense', defaultLevel: -2, description: 'Sense mana flows detecting wards and effects. Requires Shaping Level 3, Perception Level 4. Range: 20 feet per Level. Higher Levels yield higher sensitivity' },
+                    { name: 'Multicasting', defaultLevel: -2, description: 'Form multiple spells at once. Requires Shaping Level 5. Cast up to 2 spells +1 at Adept +1 at Grandmaster. +1 more with Vulnerable tag. Check difficulty: spell Level*(1.5+0.5 per successive spell). Must have Level 4+ in each spell beyond first' }
+                ],
+                
+                // Spatial Magic Spells
+                spatialMagic: [
+                    { name: 'Blink', defaultLevel: -3, description: 'Quick short range teleport. Requires Spatial Magic Level 3. Mana Cost: 20+5 per Level. Cast Time: 50-5 per Level TU (min 3). Range: 50+20 per Level feet (+100 per Level above 7)' },
+                    { name: 'Blink Other', defaultLevel: -2, description: 'Use Blink to move targets. Objects <100+50 per Tier lbs. Characters get contested Check to resist +3 effective Levels, may apply full Shaping' },
+                    { name: 'Dimensional Gate', defaultLevel: -2, description: 'Portal linking two points via pocket dimension. Channeled, Vulnerable. Requires Spatial Magic Level 6. Mana Cost: 1000/Hour. Cast Time: 600 TU. Line of sight only unless synchronized by two casters' },
+                    { name: 'Recall', defaultLevel: 0, description: 'Teleport to pre-prepared anchor. Mana Cost: 30. Cast Time: 100-10 per Level TU. Range: 5 miles per Level. Bring 1 per Tier people in contact' },
+                    { name: 'Reactive Blink', defaultLevel: -1, description: 'Use Blink as Reaction if castable in <10 TU. Only Reactive Blink Level used for contested Check to avoid attack' },
+                    { name: 'Reactive Spatial Manipulation', defaultLevel: -3, description: 'Create small zones of expanded/shrunken space as Reaction. Max radius reduced by factor of 5. Acts as Enhancer to Reaction Skills. Cost minimum: 10 mana. Max Tier when casting = Reactive Spatial Manipulation Tier. Contested Check to cast in time' },
+                    { name: 'Spatial Expansion/Reduction', defaultLevel: -2, description: 'Create zone of expanded/contracted space. Channeled. Mana Cost: 5-0.5 per Tier (min 1) per foot radius per 10 TU. Cast Time: 100-10 per Tier TU (min 1). Max radius: 3+2 per Level feet. Range: 50+25 per Tier feet. Space multiplied/divided by 3+1 per Tier factor. Collapse damage: 3*radius*ceiling(TU open/30) Blunt in 2*radius*ceiling(TU open/50) area' },
+                    { name: 'Teleportation', defaultLevel: -1, description: 'Move to familiar location. Vulnerable. Requires Spatial Magic Level 3, Divination Level 3. Mana Cost: 100+30 per Level. Cast Time: 600-100 per Tier TU (min 50). Range: 50 miles per Level. Bring 1 per Tier people/equivalent mass within 10 feet' }
+                ],
+                
+                // Spell Formula Spells
+                spellFormula: [
+                    { name: 'Explosive Glyph', defaultLevel: 0, description: 'Glyph that explodes when mana channeled. Must be physically inscribed. Mana Cost: 50 per Level. Cast Time: 6000 TU. Activate range: 10+5 per Level feet in 5 TU. Damage: 50+25 per Level Blunt in 10+5 per Level area' }
+                ],
+                
+                // Warding Spells
+                warding: [
+                    { name: 'Alarm Ward', defaultLevel: 0, description: 'Trigger alarm or mental notification. Channeled, Vulnerable. Can trigger other wards. Mana Cost: 5 per Level. Cast Time: 3000 TU. Max radius: 10+5 per Tier feet' },
+                    { name: 'Anti-Shaping Ward', defaultLevel: -2, description: 'Limit ability to shape mana. Channeled, Vulnerable. Mana Cost: 100 per Level. Cast Time: 36000 TU. Max radius: 15+10 per Level feet. Reduces effective Shaping by 1 per Ward Level. Daily upkeep = ward cost' },
+                    { name: 'Explosive Ward', defaultLevel: 0, description: 'Ward designed to explode on condition. Mana Cost: 50 per Level. Cast Time: 6000 TU. Damage: 50+25 per Level Blunt in 10+5 per Level area' },
+                    { name: 'Ward Breaking', defaultLevel: -1, description: 'Break targeted ward. Channeled, Vulnerable. Knowledge of ward makes easier. Mana Cost: 5 per ward Level. Cast time varies by ward Level and user Skill' }
+                ],
+                
+                // Complete Alchemy System (Non-Magical)
+                alchemy: [
+                    // Basic Alchemy
+                    { name: 'Create Alchemists Fire', defaultLevel: 0, description: 'Molotov explosive fiery concoction. Radius: 10+5 per Tier feet. Damage: 10+4 per Tier Blunt, 10+4 per Tier Fire. Burning residue: 8+4 per Tier Fire/25 TU. GP: 15d/25c/60c/120b/200a' },
+                    { name: 'Create Healing Potion', defaultLevel: -1, description: 'Healing potion for quick wound repair. Requires Alchemy Level 5. Heals 20 Health per Tier. GP: 20d/40d/70c/120c/160c' },
+                    { name: 'Create Healing Salve', defaultLevel: 0, description: 'Basic salve preventing infection and improving recovery. Max Level 1. GP: 0d' },
+                    { name: 'Create Potion of Armor', defaultLevel: 0, description: 'Protection against specific damage type. Requires Alchemy Level 4. Duration: 2 hours. Improves Armor by 4 per Level. Each type separate skill. GP: 1d/10d/20c/50c/100b' },
+                    { name: 'Create Potion of Mental Acuity', defaultLevel: -1, description: 'Process information faster for study/research/combat. Duration: 10 min per Tier. GP: 10c/40c/80b/140b/200a' },
+                    { name: 'Create Potion of Strength', defaultLevel: 0, description: 'Makes imbiber substantially stronger. Duration: 1 hour. Physical weapons +20% base +10% per Level. Unarmed +50% base +25% per Level. May break unenhanced weapons. GP: 8d/30c/60c/100b/160b' },
+                    { name: 'Create Potion of Swiftness', defaultLevel: 0, description: 'Improves movement speed. Duration: 1 hour. +2/4 Movement Speed per Tier. GP: 5d/20d/35d/60d/90c' },
+                    { name: 'Create Pyre Coating', defaultLevel: -1, description: 'Sticky substance heating when exposed to air. Duration: 1 hour. +15% heat damage per Tier. Burning: 3*Tier. May melt weapon. GP: 25c/45c/90c/130b/250a' },
+                    { name: 'Create Smoke Bomb', defaultLevel: 0, description: 'Obscure area with smoke. Duration: 1800 TU. Radius: 10+5 per Level feet. Stealth +2+1 per Level in area. GP: 0d/0d/3c/20c/50c' },
+                    { name: 'Create Transformation Potion', defaultLevel: -1, description: 'Transform into creature whose organs were used. Requires Alchemy Level 2 (Level 4+ for magical creatures). Duration: 1 hour per Tier. Ingredients: 1 corpse per 4+ doses. GP: 10+c+ depending on creature' },
+                    
+                    // Poisons
+                    { name: 'Create Poison', defaultLevel: 0, description: 'Magical poison via contact/wound. Efficacy varies with Skill Level and ingredient quality. Variable ingredients and GP cost' },
+                    { name: 'Create Poison Gas', defaultLevel: -1, description: 'Bottle of magical poison gas. Efficacy varies with Skill Level and ingredient quality. Variable ingredients and GP cost' },
+                    { name: 'Debilitating Gas', defaultLevel: 0, description: 'Thick gray gas causing disorientation/nausea. Radius: 10 feet per Tier. -2 effective total Level per Tier in gas. Effect lasts 1 hour if in gas 200+ TU. GP: 10c/20c/40c/80b' },
+                    { name: 'Dreambane Poison', defaultLevel: 0, description: 'Causes fitful sleep. Applied by imbibing/injecting/weapon. Sleep after 500/350/200 TU by tier. GP: 10c/40c/100c' },
+                    { name: 'Miasmora Toxin', defaultLevel: 0, description: 'Fast-acting magical poison gas. Black color. Radius: 15+10 per Tier feet. 5+5 per Tier poison damage per 100 TU for 2000 TU. Half movement speed. +5 Stealth in smog. Double difficulty to create vs target level. GP: 40b/80b/160a' },
+                    { name: 'Viridia Poison', defaultLevel: 0, description: 'Simple fast-acting cutting poison. 5 poison damage per 250/125 TU for 6000 TU by tier. GP: 5c/10c' }
+                ]
+            },
+            
+            // Complete MOL Dossier Combat Skills System
+            
+            // Domain Skills (Weapon Proficiencies)  
+            weaponSkills: {
+                swords: { name: 'Swords', defaultLevel: 0, description: 'The user is experienced in wielding swords. Domain Skill for Skills used with swords', enhancer: true },
+                daggers: { name: 'Daggers', defaultLevel: 0, description: 'The user is skilled in wielding daggers to deadly effect. Acts as Enhancer to melee Skills used with daggers and knives. Reduces Time by 10% per Tier', enhancer: true, timeReduction: true },
+                clubs: { name: 'Clubs', defaultLevel: 0, description: 'The user knows how best to hurt people with a big stick. Acts as Enhancer to Skills used with clubs, maces, and warhammers', enhancer: true },
+                axes: { name: 'Axes', defaultLevel: 0, description: 'The user is experienced with axes and hatchets. Acts as Enhancer to Skills used with axes', enhancer: true },
+                shields: { name: 'Shields', defaultLevel: 0, description: 'The user is skilled in defensive and offensive shield use. Acts as Enhancer to Skills used with shields', enhancer: true },
+                bows: { name: 'Bows', defaultLevel: 0, description: 'The user is deadly accurate with bows and crossbows. Acts as Enhancer to Skills used with bows and crossbows', enhancer: true },
+                throwing: { name: 'Throwing', defaultLevel: 0, description: 'The user is Skilled in accurately hurling objects. Domain Skill for throwing attacks', enhancer: true },
+                unarmed: { name: 'Unarmed Combat', defaultLevel: 0, description: 'The user is experienced in fighting with naught but their own body. Enhancer to physical melee Skills used without weapon. +10% +5% per Level base damage. Base human unarmed: 10 Blunt', enhancer: true, damageBonus: true }
+            },
+            
+            // Complete Combat Techniques from MOL Dossier  
+            combatTechniques: {
+                // Weapon Attacks (Exact MOL Dossier)
+                stab: { name: 'Stab', defaultLevel: 0, description: 'The user attacks with a piercing melee weapon. Time: 40-4 per Level TU (min 4). Damage: 70% weapon (Piercing)+17.5% per Tier', applicableWeapons: ['swords', 'daggers'], time: '40-4/Level', damage: '70%+17.5%/Tier' },
+                slash: { name: 'Slash', defaultLevel: 0, description: 'The user attacks with a slashing weapon. Time: 65-6.5 per Level TU (min 6.5). Damage: 90% weapon (Slashing)+20% per Tier', applicableWeapons: ['swords', 'axes'], time: '65-6.5/Level', damage: '90%+20%/Tier' },
+                bludgeon: { name: 'Bludgeon', defaultLevel: 0, description: 'The user hits a target with a blunt weapon. Time: 90-8 per Level TU (min 8). Damage: 145% weapon (blunt)+35% per Tier', applicableWeapons: ['clubs'], time: '90-8/Level', damage: '145%+35%/Tier' },
+                overheadSlash: { name: 'Overhead Slash', defaultLevel: 0, description: 'The user makes a massive overhead strike with a slashing weapon. Time: 120-12 per Level TU (min 12). Damage: 160% weapon (Slashing)+40% per Tier', applicableWeapons: ['swords', 'axes'], time: '120-12/Level', damage: '160%+40%/Tier' },
+                cleave: { name: 'Cleave', defaultLevel: 0, description: 'The user makes a wide slash with their weapon. Time: 80-8 per Level TU (min 8). Damage: 75% weapon (Slashing)+18% per Tier. Hits any number of targets in front of the user within an ~135 degree arc', applicableWeapons: ['swords', 'axes'], time: '80-8/Level', damage: '75%+18%/Tier', aoe: true },
+                nick: { name: 'Nick', defaultLevel: 0, description: 'The user makes an extremely quick strike with a slashing or piercing melee weapon. Time: 10-1 per Level TU (min 1). Damage: 40% weapon (Piercing)+10% per Tier', applicableWeapons: ['swords', 'daggers'], time: '10-1/Level', damage: '40%+10%/Tier' },
+                hiltStrike: { name: 'Hilt Strike', defaultLevel: 0, description: 'The user strikes with the hilt of their weapon. Time: 10-1 per Level TU (min 1). Damage: 6 Blunt damage+2.5 per Tier', applicableWeapons: ['swords', 'daggers'], time: '10-1/Level', damage: '6+2.5/Tier' },
+                knock: { name: 'Knock', defaultLevel: 0, description: 'The user uses their fist or a blunt weapon to attempt to knock the target prone. Time: 80-6 per Level TU. Damage: 85% weapon (blunt)+20% per Tier. If this attack deals damage equal to at least 20% of the targets Health, the target is knocked prone', applicableWeapons: ['clubs', 'unarmed'], time: '80-6/Level', damage: '85%+20%/Tier', knockdown: true },
+                
+                // Defensive Techniques
+                parry: { name: 'Parry', defaultLevel: 0, description: 'The user knows how to deflect incoming attacks. Reaction. Only works on attacks with a Physical component. Can only fully negate attacks with total damage ≤8 per Level. A successful Parry against higher damage will negate 20% of the damage, before Armor is applied', applicableWeapons: ['swords'], reaction: true, mitigation: true },
+                block: { name: 'Block', defaultLevel: 0, description: 'The user blocks an attack with a shield or more durable part of their body. Reaction. Increases Armor against the attack by 30%+10% per Level above 1', applicableWeapons: ['shields'], reaction: true, armorBonus: true },
+                shieldBash: { name: 'Shield Bash', defaultLevel: 0, description: 'Offensive strike with shield edge or boss. Time: 70-7 per Level TU (min 7). Damage: 120% shield damage (Blunt)+25% per Tier. Can interrupt enemy actions', applicableWeapons: ['shields'], time: '70-7/Level', damage: '120%+25%/Tier', interrupting: true },
+                counterSlash: { name: 'Counter Slash', defaultLevel: 0, description: 'The user attacks quickly with a slashing weapon as a counter attack. Time: Instant. Damage: 35% weapon (Slashing)+8% per Tier. Use upon successfully Parrying an attack. Increases Interruption from Parry by 10-1 per Level Time Units', applicableWeapons: ['swords'], instant: true, counter: true },
+                
+                // Advanced Techniques
+                eviscerate: { name: 'Eviscerate', defaultLevel: 0, description: 'The user uses a bladed weapon to inflict a bleeding gash on their target. Time: 45-4.5 per Level TU (min 4.5). Damage: 50% weapon (piercing)+15% per Tier. Inflicts a stack of Bleeding on the target on dealing damage', applicableWeapons: ['swords', 'daggers'], bleeding: true },
+                rendArmor: { name: 'Rend Armor', defaultLevel: 0, description: 'The user attacks with a slashing weapon to exploit a weakness in a targets armor and create an opening for attack. Time: 60-6 per Level TU (min 6). Damage: 60% weapon (slashing)+15% per Tier. If at least 20% of the total damage of Rend Armor breaches the targets Armor, the targets Physical Armor is reduced by 3 per Tier until repaired. May be ineffective against certain armors', applicableWeapons: ['swords', 'axes'], armorReduction: true },
+                
+                // Movement Attacks
+                charge: { name: 'Charge', defaultLevel: 0, description: 'The user sprints at an opponent and attacks with their fists or a melee weapon. Damage: 16% weapon damage (any Physical)+4.5% per Level above 1 per 11 feet of sprinting with a reasonably straight heading prior to use, maxing after 55 feet. Usable only when the user slows to normal speed from sprint. Time to use may be delayed indefinitely, in increments of 5 Time Units', applicableWeapons: ['all'], movement: true },
+                shoulderCheck: { name: 'Shoulder Check', defaultLevel: 0, description: 'The user slams into an opponent after sprinting. Ineffective on larger opponents. Damage: 5 Blunt base+3 Blunt per Level per 11 feet of sprinting with reasonably straight heading prior to use, maxing after 44 feet. If the user is substantially larger than the target, damage is increased by 50% and the target is knocked Prone. Deals 40% of damage to the user from recoil, before the 50% increase', applicableWeapons: ['unarmed'], movement: true, recoil: true },
+                blinkStrike: { name: 'Blink Strike', defaultLevel: -1, description: 'The user strikes quickly with a melee weapon after coming out from the Blink Spell. Time: Instant. Damage: 20% weapon damage (any Physical)+5% per Tier above Novice', applicableWeapons: ['all'], instant: true, magical: true },
+                
+                // Ranged Attacks  
+                shootArrow: { name: 'Shoot Arrow', defaultLevel: 0, description: 'The user loads/draws and fires an arrow from a bow or crossbow. Time: 80-6 per Level TU (min 8). Range: base. Damage: 100% weapon damage (Piercing)+12% per Level above 1', applicableWeapons: ['bows'], time: '80-6/Level', damage: '100%+12%/Level' },
+                throwDagger: { name: 'Throw Dagger', defaultLevel: 0, description: 'The user can accurately throw their daggers to deadly effect. Time: 30-7 per Level TU (min 2). Range: 20+5 per Tier feet. Damage: 40% weapon damage (piercing)+10% per Tier', applicableWeapons: ['daggers'], time: '30-7/Level', range: '20+5/Tier' },
+                throwPotion: { name: 'Throw Potion', defaultLevel: 0, description: 'The user can accurately throw potions, shattering them against surfaces or enemies to deadly effect. Time: 50-5 per Tier TU (min 5). Range: 20+10 per Level feet', applicableWeapons: ['throwing'], time: '50-5/Tier', range: '20+10/Level' },
+                
+                // Unarmed Combat
+                unarmedStrike: { name: 'Unarmed Strike', defaultLevel: 0, description: 'The user attacks with only their natural weapons. Time: 30-5 per Tier TU (min 6). Damage: 80% weapon damage (any physical)+12% per Level above 1', applicableWeapons: ['unarmed'], time: '30-5/Tier', damage: '80%+12%/Level' },
+                
+            },
+            
+            // Complete General Skills from MOL Dossier
+            generalSkills: [
+                // Core Skills from Dossier
+                { name: 'Perception', defaultLevel: 0, description: 'The user is experienced in detecting the hidden and unseen', enhancer: true },
+                { name: 'Stealth', defaultLevel: 0, description: 'The user knows how to quiet their steps and remain hidden', enhancer: true },  
+                { name: 'Survival', defaultLevel: 0, description: 'Enhancer for wilderness survival Skills, such as foraging, fire starting, and hunting', enhancer: true },
+                { name: 'Disease Analysis', defaultLevel: -1, description: 'Advanced talent in identifying and tracking the progression of diseases, whether mundane or magical' },
+                
+                // Combat-Adjacent Skills (Exact from Dossier)
+                { name: 'Evasive Maneuvers', defaultLevel: 0, description: 'The user is skilled in avoiding incoming attacks. Reaction', reaction: true, combat: true },
+                { name: 'Focused Defense', defaultLevel: 0, description: 'The user focuses purely on defending themselves. Time: 10-1 per Level TU (min 1). After being active for 10-1 per Level TU, may be used as an Enhancer to all Reaction Skills used', defensive: true, combat: true },
+                { name: 'Body Block', defaultLevel: 1, description: 'The user attempts to interpose themselves between an attack and a nearby ally. Reaction. The user must make separate contested checks for Body Block and any mitigation attempts', reaction: true, protective: true, combat: true },
+                { name: 'Dash', defaultLevel: 0, description: 'The user knows how to run efficiently and has experience pushing their limits in a flat out sprint. Once per 300 Time Units, the user may increase their sprint speed by 50%+10% per Level above 1 for 15 Time Units+5 per Level above 1. Max Level 6', movement: true, combat: true, maxLevel: 6 },
+                
+                // Positive Skills
+                { name: 'Disease Resistant', defaultLevel: 0, description: 'The holder is supernaturally resistant to disease', obtainableByPractice: false, positive: true },
+                
+                // Negative Skills (Cannot be obtained through practice)
+                { name: 'Physical Combat Ineptitude', defaultLevel: 0, description: 'Negative Skill. The holder is untalented at physical combat and, thus, has a permanent penalty relating to it', obtainableByPractice: false, negative: true },
+                { name: 'Socially Inept', defaultLevel: 0, description: 'Negative Skill. The holder is terrible in social situations. Roleplay only Skill', obtainableByPractice: false, negative: true },
+                { name: 'Fragile Constitution', defaultLevel: 0, description: 'Negative Skill, causing the holder to be more susceptible to poison and disease', obtainableByPractice: false, negative: true },
+                { name: 'Hyperfocused Caster', defaultLevel: 0, description: 'Negative Skill. The caster hyperfocuses when casting and has difficulty casting spells quickly as a result. Special: +10% to the cast time of spells during combat', obtainableByPractice: false, negative: true, combatPenalty: true },
+                
+                // Additional Skills Referenced in Combat Section
+                { name: 'Athletics', defaultLevel: 0, description: 'Running, jumping, climbing, physical fitness' },
+                { name: 'Acrobatics', defaultLevel: 0, description: 'Balance, tumbling, agility, complex movements' },
+                { name: 'Endurance', defaultLevel: 0, description: 'Stamina, resilience, physical fortitude' },
+                { name: 'Investigation', defaultLevel: 0, description: 'Find clues, analyze evidence, logical deduction' },
+                { name: 'Insight', defaultLevel: 0, description: 'Read people, understand motivations, detect lies' },
+                { name: 'Concentration', defaultLevel: 0, description: 'Maintain focus under stress, resist distraction' },
+                { name: 'Medicine', defaultLevel: 0, description: 'Non-magical healing, first aid, anatomy knowledge' },
+                { name: 'Lockpicking', defaultLevel: 0, description: 'Bypass mechanical locks and simple traps' },
+                { name: 'Sleight of Hand', defaultLevel: 0, description: 'Pickpocketing, legerdemain, manual dexterity' },
+                { name: 'Crafting', defaultLevel: 0, description: 'Create and repair mundane items and tools' },
+                { name: 'Animal Handling', defaultLevel: 0, description: 'Train, calm, and work with animals' },
+                { name: 'Navigation', defaultLevel: 0, description: 'Find your way, read maps, celestial navigation' },
+                { name: 'Forgery', defaultLevel: 0, description: 'Create false documents and signatures' },
+                
+                // Social Skills
+                { name: 'Persuasion', defaultLevel: 0, description: 'Convince and negotiate with others' },
+                { name: 'Deception', defaultLevel: 0, description: 'Lies, misdirection, and false information' },
+                { name: 'Intimidation', defaultLevel: 0, description: 'Frighten and coerce through threats' },
+                { name: 'Performance', defaultLevel: 0, description: 'Entertain, distract, and captivate audiences' }
+            ]
+        };
+
+        // Character data structure
+        let character = {
+            name: '',
+            currentHealth: 100,
+            maxHealth: 100,
+            bloodline: '',
+            skills: [],
+            knowledge: ''
+        };
+
+        // Skill Description System Functions (defined early to avoid hoisting issues)
+        function showSkillDescription(skillName, skillType, parentKey = null) {
+            const modal = document.getElementById('skillDescriptionModal');
+            const title = document.getElementById('skillDescriptionTitle');
+            const content = document.getElementById('skillDescriptionContent');
+            
+            title.textContent = skillName;
+            
+            const descriptionData = getSkillDescription(skillName, skillType, parentKey);
+            content.innerHTML = formatSkillDescription(descriptionData);
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeSkillDescriptionModal() {
+            document.getElementById('skillDescriptionModal').style.display = 'none';
+        }
+
+        function getSkillDescription(skillName, skillType, parentKey = null) {
+            let skillData = null;
+            
+            // Search in skill database based on type
+            if (skillType === 'domain') {
+                skillData = skillDatabase.domains[skillName.toLowerCase().replace(/ /g, '')] ||
+                           Object.values(skillDatabase.domains).find(s => s.name === skillName);
+            } else if (skillType === 'spell' || skillType === 'alchemy-skill') {
+                // Search in spells/alchemy by parent domain
+                if (parentKey) {
+                    const parentSkills = skillDatabase.spells[parentKey] || [];
+                    skillData = parentSkills.find(s => s.name === skillName);
+                } else {
+                    // Search all spell arrays
+                    for (const spellArray of Object.values(skillDatabase.spells)) {
+                        const found = spellArray.find(s => s.name === skillName);
+                        if (found) {
+                            skillData = found;
+                            break;
+                        }
+                    }
+                }
+            } else if (skillType === 'weapon') {
+                skillData = skillDatabase.weaponSkills[skillName.toLowerCase().replace(/ /g, '')] ||
+                           Object.values(skillDatabase.weaponSkills).find(s => s.name === skillName);
+            } else if (skillType === 'combat') {
+                skillData = skillDatabase.combatTechniques[skillName.toLowerCase().replace(/ /g, '')] ||
+                           Object.values(skillDatabase.combatTechniques).find(s => s.name === skillName);
+            } else if (skillType === 'skill') {
+                skillData = skillDatabase.generalSkills.find(s => s.name === skillName);
+            }
+            
+            // If not found in database, check character skills for custom skills
+            if (!skillData) {
+                const characterSkill = character.skills.find(s => s.name === skillName);
+                if (characterSkill) {
+                    skillData = {
+                        name: characterSkill.name,
+                        description: characterSkill.description || 'Custom skill - no description provided.',
+                        custom: true,
+                        level: characterSkill.level,
+                        magical: characterSkill.magical,
+                        illegal: characterSkill.illegal,
+                        reaction: characterSkill.reaction,
+                        channeled: characterSkill.channeled,
+                        negative: characterSkill.negative
+                    };
+                }
+            }
+            
+            return skillData || { name: skillName, description: 'No description available.' };
+        }
+
+        function formatSkillDescription(skillData) {
+            if (!skillData) {
+                return '<div class="skill-description-content"><div class="no-description">No description available.</div></div>';
+            }
+            
+            let html = '<div class="skill-description-content">';
+            html += `<h4>${skillData.name}</h4>`;
+            
+            // Add tags/properties
+            if (skillData.magical || skillData.illegal || skillData.reaction || skillData.channeled || skillData.negative || skillData.custom) {
+                html += '<div style="margin-bottom: 12px;">';
+                if (skillData.custom) html += '<span class="tag-badge">Custom</span>';
+                if (skillData.magical && !skillData.illegal) html += '<span class="tag-badge">Magical</span>';
+                if (skillData.illegal) html += '<span class="tag-badge illegal-badge">ILLEGAL</span>';
+                if (skillData.reaction) html += '<span class="tag-badge">Reaction</span>';
+                if (skillData.channeled) html += '<span class="tag-badge">Channeled</span>';
+                if (skillData.negative) html += '<span class="tag-badge illegal-badge">Negative</span>';
+                html += '</div>';
+            }
+            
+            // Description text
+            if (skillData.description && skillData.description !== 'No description available.') {
+                html += `<div class="description-text">${skillData.description}</div>`;
+            } else {
+                html += '<div class="no-description">No description available for this skill.</div>';
+            }
+            
+            // Mechanical details (if available in description)
+            if (skillData.description && skillData.description.includes('Mana Cost:') || 
+                skillData.description && skillData.description.includes('Cast Time:') ||
+                skillData.description && skillData.description.includes('Range:') ||
+                skillData.description && skillData.description.includes('Damage:')) {
+                
+                html += '<div class="mechanics-section">';
+                html += '<div class="mechanics-title">Mechanical Details</div>';
+                
+                const lines = skillData.description.split('\n');
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line.includes('Mana Cost:') || line.includes('Cast Time:') || 
+                        line.includes('Range:') || line.includes('Damage:') ||
+                        line.includes('Duration:') || line.includes('Radius:') ||
+                        line.includes('Time:') || line.includes('GP:')) {
+                        html += `<div class="mechanics-item">${line}</div>`;
+                    }
+                });
+                html += '</div>';
+            }
+            
+            // Special properties
+            if (skillData.description && (skillData.description.includes('Special:') || 
+                skillData.description.includes('Requires ') || skillData.description.includes('Tags:'))) {
+                
+                html += '<div class="special-properties">';
+                html += '<div class="special-title">Special Properties</div>';
+                
+                const lines = skillData.description.split('\n');
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line.includes('Special:') || line.includes('Requires ') || 
+                        line.includes('Tags:') || line.includes('Obtainable through practice:')) {
+                        html += `<div>${line}</div>`;
+                    }
+                });
+                html += '</div>';
+            }
+            
+            // Starting level info
+            if (skillData.defaultLevel !== undefined) {
+                html += `<div style="margin-top: 12px; font-size: 0.85em; color: #6c757d;">`;
+                html += `<strong>Default Starting Level:</strong> ${skillData.defaultLevel}`;
+                html += `</div>`;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function createInfoIcon(skillName, skillType, parentKey = null) {
+            return `<span class="skill-info-icon" onclick="showSkillDescription('${skillName.replace(/'/g, "\\'")}', '${skillType}', '${parentKey || ''}')" title="Show skill description">?</span>`;
+        }
+
+        // Undo system
+        let actionHistory = [];
+        const MAX_HISTORY = 20;
+
+        // Save state before making changes
+        function saveStateForUndo(actionDescription, oldState = null) {
+            const currentState = oldState || JSON.parse(JSON.stringify(character));
+            
+            actionHistory.push({
+                description: actionDescription,
+                timestamp: Date.now(),
+                characterState: currentState
+            });
+            
+            // Limit history size
+            if (actionHistory.length > MAX_HISTORY) {
+                actionHistory.shift();
+            }
+            
+            updateUndoUI();
+        }
+
+        // Update undo UI
+        function updateUndoUI() {
+            const undoButton = document.getElementById('undoButton');
+            const lastActionText = document.getElementById('lastActionText');
+            
+            if (!undoButton || !lastActionText) return; // UI not loaded yet
+            
+            if (actionHistory.length > 0) {
+                const lastAction = actionHistory[actionHistory.length - 1];
+                const timeAgo = Math.floor((Date.now() - lastAction.timestamp) / 1000);
+                const timeText = timeAgo < 60 ? `${timeAgo}s ago` : `${Math.floor(timeAgo / 60)}m ago`;
+                
+                lastActionText.textContent = `${lastAction.description} (${timeText})`;
+                undoButton.disabled = false;
+            } else {
+                lastActionText.textContent = 'No recent actions';
+                undoButton.disabled = true;
+            }
+        }
+
+        // Undo last action
+        function undoLastAction() {
+            if (actionHistory.length === 0) return;
+            
+            const lastAction = actionHistory.pop();
+            
+            // Restore character state
+            character = JSON.parse(JSON.stringify(lastAction.characterState));
+            
+            // Update UI
+            updateCharacterUI();
+            renderSkills();
+            updateHealthBar();
+            updateUndoUI();
+            
+            // Show confirmation
+            updateAutoSaveStatus(`Undid: ${lastAction.description}`);
+        }
+
+        // Create new character
+        function createNewCharacter() {
+            if (character.name || character.skills.length > 4 || character.currentHealth !== 100 || character.knowledge.trim()) {
+                const confirmation = confirm(
+                    'This will create a new character and lose all current progress.\n\n' +
+                    'Current character will be automatically saved if it has a name.\n\n' +
+                    'Are you sure you want to continue?'
+                );
+                
+                if (!confirmation) return;
+                
+                // Auto-save current character if it has a name
+                if (character.name && character.name.trim()) {
+                    saveCharacterData();
+                    updateAutoSaveStatus(`Auto-saved "${character.name}" before creating new character`);
+                }
+            }
+            
+            // Save state for undo
+            saveStateForUndo('Create new character');
+            
+            // Reset to default character
+            character = {
+                name: '',
+                currentHealth: 100,
+                maxHealth: 100,
+                bloodline: '',
+                skills: [],
+                knowledge: ''
+            };
+            
+            initializeDefaultSkills();
+            updateCharacterUI();
+            renderSkills();
+            updateHealthBar();
+            
+            updateAutoSaveStatus('Created new character');
+        }
+
+        // Initialize with default skills
+        function initializeDefaultSkills() {
+            character.skills = [
+                {
+                    id: 'shaping',
+                    name: 'Shaping',
+                    level: 2,
+                    xp: 0,
+                    type: 'domain',
+                    parent: null,
+                    magical: true
+                },
+                {
+                    id: 'conjuration',
+                    name: 'Conjuration',
+                    level: 1,
+                    xp: 0,
+                    type: 'domain',
+                    parent: null,
+                    magical: true
+                },
+                {
+                    id: 'magic_missile_conjuration',
+                    name: 'Magic Missile',
+                    level: 1,
+                    xp: 0,
+                    type: 'spell',
+                    parent: 'conjuration',
+                    magical: true
+                },
+                {
+                    id: 'negation',
+                    name: 'Negation',
+                    level: 1,
+                    xp: 0,
+                    type: 'domain',
+                    parent: null,
+                    magical: true
+                }
+            ];
+        }
+
+        // Switch tabs in skill browser
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Render the appropriate content
+            if (tabName === 'magical') {
+                renderMagicalSkills();
+            } else if (tabName === 'combat') {
+                renderCombatSkills();
+            } else if (tabName === 'general') {
+                renderGeneralSkills();
+            }
+        }
+
+        // Render magical skills tab
+        function renderMagicalSkills(searchTerm = '') {
+            const content = document.getElementById('magicalSkillsContent');
+            content.innerHTML = '';
+            const search = (searchTerm || document.getElementById('skillSearch').value || '').toLowerCase();
+            
+            // Magical Domains (include all domains)
+            const domainSection = document.createElement('div');
+            domainSection.className = 'skill-category';
+            domainSection.innerHTML = '<div class="category-header">Magical Domains</div>';
+            
+            Object.entries(skillDatabase.domains).forEach(([key, domain]) => {
+                // Show magical domains (exclude nothing - include alchemy too)
+                if (domain.magical !== false && 
+                    (domain.name.toLowerCase().includes(search) || domain.description.toLowerCase().includes(search))) {
+                    const item = createSkillBrowserItem(domain, 'domain', null, domain.magical);
+                    // Add illegal warning for illegal domains
+                    if (domain.illegal) {
+                        item.style.border = '2px solid #ff6b6b';
+                        item.style.backgroundColor = '#ffe0e0';
+                        const warning = document.createElement('div');
+                        warning.textContent = '⚠️ ILLEGAL MAGIC - Learning requires special tutor/guide';
+                        warning.style.color = '#d63031';
+                        warning.style.fontWeight = 'bold';
+                        warning.style.fontSize = '0.8em';
+                        warning.style.marginTop = '5px';
+                        item.appendChild(warning);
+                    }
+                    domainSection.appendChild(item);
+                }
+            });
+            
+            if (domainSection.children.length > 1) content.appendChild(domainSection);
+            
+            // Add separate section for Alchemy Domain (Non-Magical)
+            const alchemySection = document.createElement('div');
+            alchemySection.className = 'skill-category';
+            alchemySection.innerHTML = '<div class="category-header">Alchemy Domain (Non-Magical)</div>';
+            
+            Object.entries(skillDatabase.domains).forEach(([key, domain]) => {
+                // Only show alchemy domain
+                if (domain.magical === false && domain.alchemical &&
+                    (domain.name.toLowerCase().includes(search) || domain.description.toLowerCase().includes(search))) {
+                    const item = createSkillBrowserItem(domain, 'domain', null, false);
+                    alchemySection.appendChild(item);
+                }
+            });
+            
+            if (alchemySection.children.length > 1) content.appendChild(alchemySection);
+            
+            // Spells by Domain
+            Object.entries(skillDatabase.spells).forEach(([domainKey, spells]) => {
+                const domainName = skillDatabase.domains[domainKey]?.name || domainKey;
+                const matchingSpells = spells.filter(spell => 
+                    spell.name.toLowerCase().includes(search) || 
+                    spell.description.toLowerCase().includes(search) ||
+                    domainName.toLowerCase().includes(search)
+                );
+                
+                if (matchingSpells.length > 0) {
+                    const spellSection = document.createElement('div');
+                    spellSection.className = 'skill-category';
+                    spellSection.innerHTML = `<div class="category-header">${domainName} Spells</div>`;
+                    
+                    matchingSpells.forEach(spell => {
+                        const item = createSkillBrowserItem(spell, 'spell', domainKey, domainKey !== 'alchemy');
+                        spellSection.appendChild(item);
+                    });
+                    
+                    content.appendChild(spellSection);
+                }
+            });
+        }
+
+        // Render combat skills tab
+        function renderCombatSkills(searchTerm = '') {
+            const content = document.getElementById('combatSkillsContent');
+            content.innerHTML = '';
+            const search = (searchTerm || document.getElementById('skillSearch').value || '').toLowerCase();
+            const selectedWeapon = document.getElementById('weaponTypeSelector').value;
+            
+            // Weapon Skills section (unchanged)
+            const weaponSection = document.createElement('div');
+            weaponSection.className = 'skill-category';
+            weaponSection.innerHTML = '<div class="category-header">Weapon Proficiencies</div>';
+            
+            Object.entries(skillDatabase.weaponSkills).forEach(([key, weapon]) => {
+                if ((!selectedWeapon || key === selectedWeapon) && 
+                    (weapon.name.toLowerCase().includes(search) || weapon.description.toLowerCase().includes(search))) {
+                    const item = createWeaponSkillItem(weapon, key);
+                    weaponSection.appendChild(item);
+                }
+            });
+            
+            if (weaponSection.children.length > 1) content.appendChild(weaponSection);
+            
+            // NEW: Standalone Combat Skills section
+            const standaloneSection = document.createElement('div');
+            standaloneSection.className = 'skill-category';
+            standaloneSection.innerHTML = '<div class="category-header">Combat Skills</div>';
+            
+            // Filter general skills that are combat-related
+            const combatGeneralSkills = skillDatabase.generalSkills.filter(skill => 
+                skill.combat && 
+                (skill.name.toLowerCase().includes(search) || skill.description.toLowerCase().includes(search))
+            );
+            
+            combatGeneralSkills.forEach(skill => {
+                const item = createSkillBrowserItem(skill, 'skill', null, false);
+                standaloneSection.appendChild(item);
+            });
+            
+            if (standaloneSection.children.length > 1) content.appendChild(standaloneSection);
+            
+            // Weapon-Specific Techniques section (modified to exclude moved skills)
+            const techniqueSection = document.createElement('div');
+            techniqueSection.className = 'skill-category';
+            techniqueSection.innerHTML = '<div class="category-header">Weapon Techniques</div>';
+            
+            Object.entries(skillDatabase.combatTechniques).forEach(([key, technique]) => {
+                const matchesWeapon = !selectedWeapon || 
+                    technique.applicableWeapons.includes(selectedWeapon) || 
+                    technique.applicableWeapons.includes('all');
+                    
+                if (matchesWeapon && 
+                    (technique.name.toLowerCase().includes(search) || technique.description.toLowerCase().includes(search))) {
+                    const item = createCombatTechniqueItem(technique, key, selectedWeapon);
+                    techniqueSection.appendChild(item);
+                }
+            });
+            
+            if (techniqueSection.children.length > 1) content.appendChild(techniqueSection);
+        }
+
+        // Render general skills tab
+        function renderGeneralSkills(searchTerm = '') {
+            const content = document.getElementById('generalSkillsContent');
+            content.innerHTML = '';
+            const search = (searchTerm || document.getElementById('skillSearch').value || '').toLowerCase();
+            
+            const section = document.createElement('div');
+            section.className = 'skill-category';
+            section.innerHTML = '<div class="category-header">General Skills</div>';
+            
+            skillDatabase.generalSkills.forEach(skill => {
+                if (skill.name.toLowerCase().includes(search) || skill.description.toLowerCase().includes(search)) {
+                    const item = createSkillBrowserItem(skill, 'skill', null, false);
+                    section.appendChild(item);
+                }
+            });
+            
+            if (section.children.length > 1) content.appendChild(section);
+        }
+
+        // Filter combat skills by weapon
+        function filterCombatSkills() {
+            renderCombatSkills();
+        }
+
+        // Create weapon skill item
+        function createWeaponSkillItem(weapon, weaponKey) {
+            const div = document.createElement('div');
+            div.className = 'skill-list-item';
+            
+            const exists = character.skills.some(s => 
+                s.name.toLowerCase() === weapon.name.toLowerCase() && s.type === 'weapon'
+            );
+            
+            div.innerHTML = `
+                <div class="skill-details">
+                    <div class="skill-name-browse">${weapon.name}
+                        <span class="skill-type-badge">Weapon Skill</span>
+                    </div>
+                    <div class="skill-description">${weapon.description}</div>
+                </div>
+                ${exists ? 
+                    '<span style="color: #666;">Already learned</span>' :
+                    `<button class="add-skill-button" onclick="addWeaponSkill('${weaponKey}')">Add</button>`
+                }
+            `;
+            
+            return div;
+        }
+
+        // Create combat technique item
+        function createCombatTechniqueItem(technique, techniqueKey, selectedWeapon) {
+            const div = document.createElement('div');
+            div.className = 'skill-list-item';
+            
+            // Get applicable weapons that the character has
+            const applicableWeapons = character.skills.filter(s => 
+                s.type === 'weapon' && 
+                (technique.applicableWeapons.includes('all') || 
+                 technique.applicableWeapons.some(w => 
+                    skillDatabase.weaponSkills[w]?.name === s.name
+                 ))
+            );
+            
+            // Check which weapons already have this technique
+            const weaponsWithTechnique = applicableWeapons.filter(weapon => 
+                skillAlreadyExists(technique.name, 'combat', weapon.id)
+            );
+            
+            // Check if all compatible weapons already have this technique
+            const allWeaponsHaveTechnique = applicableWeapons.length > 0 && 
+                weaponsWithTechnique.length === applicableWeapons.length;
+            
+            let statusText = '';
+            let buttonHTML = '';
+            
+            if (applicableWeapons.length === 0) {
+                statusText = '<span style="color: #666;">No compatible weapons learned</span>';
+                buttonHTML = '';
+            } else if (allWeaponsHaveTechnique) {
+                statusText = '<span style="color: #4CAF50; font-weight: bold; font-size: 0.9em;">✓ Known by all compatible weapons</span>';
+                buttonHTML = '';
+            } else {
+                const availableCount = applicableWeapons.length - weaponsWithTechnique.length;
+                statusText = `<span style="color: #4CAF50;">${availableCount} weapon(s) can learn this</span>`;
+                buttonHTML = `<button class="add-skill-button" onclick="showWeaponSelectModal('${techniqueKey}')">
+                                Add to Weapon
+                             </button>`;
+            }
+            
+            // Show which weapons already have this technique
+            let weaponStatusInfo = '';
+            if (weaponsWithTechnique.length > 0) {
+                const weaponNames = weaponsWithTechnique.map(w => w.name).join(', ');
+                weaponStatusInfo = `<div class="applicable-weapons" style="color: #666; font-style: italic;">Already known by: ${weaponNames}</div>`;
+            }
+            
+            div.innerHTML = `
+                <div class="skill-details">
+                    <div class="skill-name-browse">${technique.name}
+                        ${technique.reaction ? '<span class="skill-type-badge">Reaction</span>' : ''}
+                        ${technique.applicableWeapons.length > 3 ? 
+                            '<span class="shared-skill-indicator">Multi-weapon</span>' : ''}
+                    </div>
+                    <div class="skill-description">${technique.description}</div>
+                    <div class="applicable-weapons">
+                        Applicable to: ${technique.applicableWeapons.join(', ')}
+                    </div>
+                    ${weaponStatusInfo}
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                    ${statusText}
+                    ${buttonHTML}
+                </div>
+            `;
+            
+            return div;
+        }
+
+        // Add weapon skill
+        function addWeaponSkill(weaponKey) {
+            const weapon = skillDatabase.weaponSkills[weaponKey];
+            if (!weapon) return;
+            
+            const newSkill = {
+                id: weaponKey + '_' + Date.now(),
+                name: weapon.name,
+                level: weapon.defaultLevel || 0,
+                xp: 0,
+                type: 'weapon',
+                parent: null,
+                magical: false
+            };
+            
+            character.skills.push(newSkill);
+            renderSkills();
+            renderCombatSkills();
+            saveCharacter();
+        }
+
+        // Show weapon select modal for adding techniques
+        function showWeaponSelectModal(techniqueKey) {
+            const technique = skillDatabase.combatTechniques[techniqueKey];
+            if (!technique) return;
+            
+            // Get applicable weapons that the character has
+            const applicableWeapons = character.skills.filter(s => 
+                s.type === 'weapon' && 
+                (technique.applicableWeapons.includes('all') || 
+                 technique.applicableWeapons.some(w => 
+                    skillDatabase.weaponSkills[w]?.name === s.name
+                 ))
+            );
+            
+            if (applicableWeapons.length === 0) {
+                alert('You need to learn a compatible weapon skill first!');
+                return;
+            }
+            
+            // Filter out weapons that already have this technique
+            const availableWeapons = applicableWeapons.filter(weapon => {
+                // Check if this weapon already has this technique
+                return !skillAlreadyExists(technique.name, 'combat', weapon.id);
+            });
+            
+            if (availableWeapons.length === 0) {
+                alert(`You already know ${technique.name} for all compatible weapons!`);
+                return;
+            }
+            
+            // Create selection dialog with only available weapons
+            const weaponOptions = availableWeapons.map(w => 
+                `<option value="${w.id}">${w.name}</option>`
+            ).join('');
+            
+            const modalHtml = `
+                <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                     background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.3); z-index: 2000;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">Add ${technique.name}</h3>
+                    <p style="margin-bottom: 10px;">Select weapon to add this technique to:</p>
+                    <select id="techniqueWeaponSelect" style="width: 100%; padding: 8px; margin-bottom: 15px;">
+                        ${weaponOptions}
+                    </select>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button onclick="closeTechniqueModal()" style="padding: 8px 16px; background: #e0e0e0; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+                        <button onclick="addTechniqueToWeapon('${techniqueKey}')" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Add</button>
+                    </div>
+                </div>
+                <div onclick="closeTechniqueModal()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999;"></div>
+            `;
+            
+            const modalDiv = document.createElement('div');
+            modalDiv.id = 'techniqueModal';
+            modalDiv.innerHTML = modalHtml;
+            document.body.appendChild(modalDiv);
+        }
+
+        // Close technique modal
+        function closeTechniqueModal() {
+            const modal = document.getElementById('techniqueModal');
+            if (modal) modal.remove();
+        }
+
+        // Add technique to weapon
+        function addTechniqueToWeapon(techniqueKey) {
+            const technique = skillDatabase.combatTechniques[techniqueKey];
+            const weaponId = document.getElementById('techniqueWeaponSelect').value;
+            
+            if (!technique || !weaponId) return;
+            
+            // Check if this technique already exists for this weapon
+            if (skillAlreadyExists(technique.name, 'combat', weaponId)) {
+                const weaponName = character.skills.find(s => s.id === weaponId)?.name || 'Unknown';
+                alert(`${weaponName} already knows ${technique.name}!`);
+                closeTechniqueModal();
+                return;
+            }
+            
+            // Create unique ID for this weapon-technique combination
+            const techniqueId = `${techniqueKey}_${weaponId}_${Date.now()}`;
+            
+            const newTechnique = {
+                id: techniqueId,
+                name: technique.name,
+                level: technique.defaultLevel || 0,
+                xp: 0,
+                type: 'combat',
+                parent: weaponId,
+                magical: false,
+                reaction: technique.reaction || false
+            };
+            
+            character.skills.push(newTechnique);
+            renderSkills();
+            closeTechniqueModal();
+            renderCombatSkills(); // Refresh the browser view
+            saveCharacter();
+        }
+
+        // Create skill browser item (for magical and general skills)
+        // Helper function for robust duplicate detection
+        function skillAlreadyExists(skillName, skillType, parentKey = null) {
+            return character.skills.some(existingSkill => {
+                // Normalize names for comparison
+                const existingName = existingSkill.name.toLowerCase().trim();
+                const newSkillName = skillName.toLowerCase().trim();
+                
+                // Must match name and type
+                const nameMatch = existingName === newSkillName;
+                const typeMatch = existingSkill.type === skillType;
+                
+                // For spells, check parent domain by name if parentKey provided
+                if (skillType === 'spell' && parentKey) {
+                    // Find the parent domain for this spell
+                    const parentDomain = skillDatabase.domains[parentKey];
+                    if (parentDomain) {
+                        // Check if the existing skill's parent domain has the same name
+                        const existingParent = character.skills.find(s => s.id === existingSkill.parent);
+                        if (existingParent) {
+                            const parentNameMatch = existingParent.name.toLowerCase() === parentDomain.name.toLowerCase();
+                            return nameMatch && typeMatch && parentNameMatch;
+                        }
+                    }
+                    // Fallback to just name and type if parent lookup fails
+                    return nameMatch && typeMatch;
+                }
+                
+                // For combat techniques, check exact parent ID match
+                if (skillType === 'combat' && parentKey) {
+                    const parentMatch = existingSkill.parent === parentKey;
+                    return nameMatch && typeMatch && parentMatch;
+                }
+                
+                // For all other skills, just check name and type
+                return nameMatch && typeMatch;
+            });
+        }
+
+        function createSkillBrowserItem(skill, type, parentKey, magical) {
+            const div = document.createElement('div');
+            div.className = 'skill-list-item';
+            
+            // Check if skill already exists using robust detection
+            const exists = skillAlreadyExists(skill.name, type, parentKey);
+            
+            // Debug logging for spells
+            if (type === 'spell') {
+                console.log('Spell duplicate check:', {
+                    spellName: skill.name,
+                    parentKey: parentKey,
+                    exists: exists,
+                    parentDomain: skillDatabase.domains[parentKey]?.name,
+                    existingSpells: character.skills.filter(s => s.type === 'spell').map(s => ({
+                        name: s.name, 
+                        parent: s.parent,
+                        parentSkill: character.skills.find(p => p.id === s.parent)?.name
+                    }))
+                });
+            }
+            
+            let typeLabel = type === 'domain' ? 'Domain' : type === 'spell' ? 'Spell' : 'Skill';
+            if (!magical) typeLabel += ' (Non-Magical)';
+            if (skill.alchemical) typeLabel = 'Domain (Alchemy - No Mana)';
+            
+            div.innerHTML = `
+                <div class="skill-details">
+                    <div class="skill-name-browse">${skill.name}
+                        <span class="skill-type-badge">${typeLabel}</span>
+                    </div>
+                    <div class="skill-description">${skill.description}</div>
+                    ${skill.defaultLevel !== undefined && skill.defaultLevel !== 0 ? 
+                        `<div class="skill-description">Starting Level: ${skill.defaultLevel}</div>` : ''}
+                </div>
+                ${exists ? 
+                    '<span style="color: #4CAF50; font-weight: bold; font-size: 0.9em;">✓ Already learned</span>' :
+                    `<button class="add-skill-button" onclick="addSkillFromBrowser('${skill.name}', '${type}', '${parentKey || ''}', ${magical}, ${skill.defaultLevel || 0});">Add</button>`
+                }
+            `;
+            
+            return div;
+        }
+
+        // Add skill from browser
+        function addSkillFromBrowser(name, type, parentKey, magical, defaultLevel) {
+            // Save state for undo BEFORE making changes
+            saveStateForUndo(`Added skill: ${name}`);
+            
+            let parentId = null;
+            if (parentKey) {
+                // First, look for existing parent domain by name
+                const parent = character.skills.find(s => 
+                    s.type === 'domain' && 
+                    s.name.toLowerCase() === skillDatabase.domains[parentKey]?.name.toLowerCase()
+                );
+                
+                if (!parent && type === 'spell') {
+                    // Auto-add parent domain if adding a spell
+                    const parentDomain = skillDatabase.domains[parentKey];
+                    if (parentDomain) {
+                        // Create consistent ID format
+                        const newParentId = parentKey + '_domain_' + Date.now();
+                        const newParent = {
+                            id: newParentId,
+                            name: parentDomain.name,
+                            level: parentDomain.defaultLevel || 0,
+                            xp: 0,
+                            type: 'domain',
+                            parent: null,
+                            magical: parentDomain.magical !== false
+                        };
+                        character.skills.push(newParent);
+                        parentId = newParentId;
+                    }
+                } else if (parent) {
+                    parentId = parent.id;
+                }
+            }
+            
+            const finalType = type === 'non-magical' ? 'skill' : type;
+            
+            // Additional safety: check if skill already exists before creating
+            if (skillAlreadyExists(name, finalType, parentId)) {
+                console.log('Skill already exists, skipping creation:', name);
+                // Remove the undo state since no change was made
+                actionHistory.pop();
+                updateUndoUI();
+                
+                // Just refresh the browser to update button states
+                renderMagicalSkills();
+                renderCombatSkills(); 
+                renderGeneralSkills();
+                return;
+            }
+            
+            const newSkill = {
+                id: name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(),
+                name: name,
+                level: defaultLevel || 0,
+                xp: 0,
+                type: finalType,
+                parent: parentId,
+                magical: magical
+            };
+            
+            character.skills.push(newSkill);
+            renderSkills();
+            
+            // Force refresh of the skill browser to update "Already learned" status
+            renderMagicalSkills();
+            renderCombatSkills();
+            renderGeneralSkills();
+            
+            saveCharacter();
+            updateAutoSaveStatus(`Added skill: ${name}`);
+        }
+
+        // Initialize weapon selector
+        function initializeWeaponSelector() {
+            const selector = document.getElementById('weaponTypeSelector');
+            if (!selector) return;
+            
+            selector.innerHTML = '<option value="">All Weapons & Combat Skills</option>';
+            Object.entries(skillDatabase.weaponSkills).forEach(([key, weapon]) => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = weapon.name;
+                selector.appendChild(option);
+            });
+        }
+
+        // Helper function to get tier from level
+        function getTierFromLevel(level) {
+            if (level < 0) return 1;  // Negative levels count as Tier 1
+            if (level < 3) return 1;  // Levels 0-2: Tier 1
+            if (level < 5) return 2;  // Levels 3-4: Tier 2
+            if (level < 7) return 3;  // Levels 5-6: Tier 3
+            if (level < 10) return 4; // Levels 7-9: Tier 4
+            return Math.floor((level - 10) / 3) + 5; // Level 10+: Tier 5+
+        }
+
+        // Calculate XP needed for next level (with Shaping special case)
+        function calculateXPNeeded(currentLevel, skillName = '') {
+            let tier = getTierFromLevel(currentLevel);
+            let baseXP = 3 + Math.abs(tier * 2);
+            
+            // Shaping domain gets 50% reduction (rounded to nearest)
+            if (skillName.toLowerCase().includes('shaping')) {
+                baseXP = Math.round(baseXP * 0.5);
+            }
+            
+            return baseXP;
+        }
+
+        function calculateBaseXPNeeded(currentLevel) {
+            // Kept for backwards compatibility, but now uses the corrected logic
+            return calculateXPNeeded(currentLevel);
+        }
+
+        // Get tier name
+        function getTierName(level) {
+            if (level < 0) return "Untrained";
+            if (level === 0) return "Beginner";
+            if (level <= 2) return "Novice";
+            if (level <= 4) return "Apprentice";
+            if (level <= 6) return "Adept";
+            if (level <= 9) return "Master";
+            return "Grandmaster";
+        }
+
+        // Helper function to check if a skill is magical (excludes alchemy)
+        function isMagicalSkill(skillName) {
+            const nonMagicalDomains = ['alchemy'];
+            return !nonMagicalDomains.some(domain => 
+                skillName.toLowerCase().includes(domain)
+            );
+        }
+
+        // Helper function to check if a skill is a domain
+        function isDomainSkill(skill) {
+            return skill.type === 'domain' && !skill.parent;
+        }
+
+        // Calculate mana
+        function calculateMana() {
+            let totalMana = 0;
+            
+            character.skills.forEach(skill => {
+                // Skip skills at level 0 or below
+                if (skill.level <= 0) return;
+                
+                // Skip non-magical skills (especially alchemy)
+                if (!skill.magical || !isMagicalSkill(skill.name)) return;
+                
+                let tier = getTierFromLevel(skill.level);
+                
+                if (isDomainSkill(skill)) {
+                    // Main domain: Cumulative calculation (6×1 + 6×2 + 6×3 + ... up to tier)
+                    for (let t = 1; t <= tier; t++) {
+                        totalMana += 6 * t;
+                    }
+                } else if (skill.type === 'spell' || (skill.type === 'domain' && skill.parent)) {
+                    // Sub-skills and spells: Flat 3 × tier (not cumulative)
+                    totalMana += 3 * tier;
+                }
+            });
+            
+            return totalMana;
+        }
+
+        // Show skill browser
+        function showSkillBrowser() {
+            const modal = document.getElementById('skillBrowserModal');
+            modal.style.display = 'flex';
+            initializeWeaponSelector();
+            renderMagicalSkills();
+        }
+
+        // Close skill browser
+        function closeSkillBrowser() {
+            document.getElementById('skillBrowserModal').style.display = 'none';
+        }
+
+        // Show add custom skill modal
+        // Show custom skill modal with reset
+        function showAddCustomSkill() {
+            const modal = document.getElementById('addSkillModal');
+            modal.style.display = 'flex';
+            
+            // Reset all fields
+            document.getElementById('newSkillName').value = '';
+            document.getElementById('newSkillLevel').value = '0';
+            document.getElementById('newSkillXP').value = '0';
+            document.getElementById('skillType').value = 'skill';
+            document.getElementById('parentDomain').value = '';
+            document.getElementById('newSkillDescription').value = '';
+            document.getElementById('isReaction').checked = false;
+            document.getElementById('isChanneled').checked = false;
+            document.getElementById('isNegative').checked = false;
+            
+            updateParentSelect();
+        }
+
+        function closeCustomSkillModal() {
+            document.getElementById('addSkillModal').style.display = 'none';
+        }
+
+        // Enhanced parent selection update
+
+        // Create custom skill with full validation and undo support
+        function createCustomSkill() {
+            const name = document.getElementById('newSkillName').value.trim();
+            const level = parseInt(document.getElementById('newSkillLevel').value) || 0;
+            const xp = parseFloat(document.getElementById('newSkillXP').value) || 0;
+            const type = document.getElementById('skillType').value;
+            const parentId = document.getElementById('parentDomain').value || null;
+            const description = document.getElementById('newSkillDescription').value.trim();
+            const isReaction = document.getElementById('isReaction').checked;
+            const isChanneled = document.getElementById('isChanneled').checked;
+            const isNegative = document.getElementById('isNegative').checked;
+            
+            // Auto-assign parent for alchemy skills
+            let finalParentId = parentId;
+            if (type === 'alchemy-skill') {
+                const alchemyDomain = character.skills.find(s => s.name.toLowerCase().includes('alchemy'));
+                if (alchemyDomain) {
+                    finalParentId = alchemyDomain.id;
+                } else {
+                    alert('Alchemy domain not found. Please add the Alchemy domain first.');
+                    return;
+                }
+            }
+            
+            // Validation for combat techniques - must have a weapon parent
+            if (type === 'combat' && !finalParentId) {
+                alert('Combat techniques must be assigned to a weapon. Please select a weapon.');
+                document.getElementById('parentDomain').focus();
+                return;
+            }
+            
+            // Validation
+            if (!name) {
+                alert('Please enter a skill name');
+                document.getElementById('newSkillName').focus();
+                return;
+            }
+            
+            if (level < -3 || level > 10) {
+                alert('Level must be between -3 and 10');
+                document.getElementById('newSkillLevel').focus();
+                return;
+            }
+            
+            if (xp < 0) {
+                alert('XP cannot be negative');
+                document.getElementById('newSkillXP').focus();
+                return;
+            }
+            
+            // Check for duplicates using enhanced detection
+            const finalType = mapCustomSkillType(type);
+            if (skillAlreadyExists(name, finalType, finalParentId)) {
+                alert(`A skill named "${name}" already exists. Please choose a different name.`);
+                document.getElementById('newSkillName').focus();
+                return;
+            }
+            
+            // Save state for undo
+            saveStateForUndo(`Created custom skill: ${name}`);
+            
+            // Determine magical status
+            const magical = ['domain', 'illegal-domain', 'spell', 'illegal-spell'].includes(type);
+            const illegal = ['illegal-domain', 'illegal-spell'].includes(type);
+            
+            // Create skill object
+            const newSkill = {
+                id: 'custom_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                name: name,
+                level: level,
+                xp: xp,
+                type: finalType,
+                parent: finalParentId,
+                magical: magical && type !== 'alchemy-skill', // Alchemy is non-magical
+                custom: true,
+                description: description,
+                illegal: illegal,
+                reaction: isReaction,
+                channeled: isChanneled,
+                negative: isNegative
+            };
+            
+            character.skills.push(newSkill);
+            renderSkills();
+            closeCustomSkillModal();
+            saveCharacter();
+            
+            updateAutoSaveStatus(`Created custom skill: ${name}`);
+            
+            // Show success message with skill details
+            const skillInfo = [
+                `Level ${level}`,
+                xp > 0 ? `${xp} XP` : null,
+                magical ? 'Magical' : 'Non-magical',
+                illegal ? 'ILLEGAL' : null,
+                isReaction ? 'Reaction' : null,
+                isChanneled ? 'Channeled' : null,
+                isNegative ? 'Negative' : null
+            ].filter(Boolean).join(', ');
+            
+            setTimeout(() => {
+                updateAutoSaveStatus(`${name} (${skillInfo})`);
+            }, 2000);
+        }
+
+        // Map custom skill types to internal types
+        function mapCustomSkillType(customType) {
+            const mapping = {
+                'domain': 'domain',
+                'illegal-domain': 'domain',
+                'spell': 'spell',
+                'illegal-spell': 'spell',
+                'alchemy-skill': 'spell',
+                'skill': 'skill',
+                'weapon': 'weapon',
+                'combat': 'combat'
+            };
+            return mapping[customType] || 'skill';
+        }
+
+        // Update parent selection based on skill type
+        function updateParentSelect() {
+            const skillType = document.getElementById('skillType').value;
+            const parentDiv = document.getElementById('parentSelectionDiv');
+            const parentSelect = document.getElementById('parentDomain');
+            
+            // Clear existing options
+            parentSelect.innerHTML = '';
+            
+            if (['spell', 'illegal-spell'].includes(skillType)) {
+                // Show parent selection for spells
+                parentDiv.style.display = 'block';
+                parentSelect.innerHTML = '<option value="">Select parent domain...</option>';
+                
+                // Add magical domains
+                character.skills.filter(s => s.type === 'domain' && s.magical).forEach(domain => {
+                    parentSelect.innerHTML += `<option value="${domain.id}">${domain.name}</option>`;
+                });
+                
+            } else if (skillType === 'alchemy-skill') {
+                // Auto-assign to alchemy domain and hide selection
+                const alchemyDomain = character.skills.find(s => s.name.toLowerCase().includes('alchemy'));
+                if (alchemyDomain) {
+                    parentSelect.innerHTML = `<option value="${alchemyDomain.id}" selected>${alchemyDomain.name}</option>`;
+                }
+                parentDiv.style.display = 'none'; // Hide the entire selection div
+                
+            } else if (skillType === 'combat') {
+                // Show only weapon skills for combat techniques
+                parentDiv.style.display = 'block';
+                parentSelect.innerHTML = '<option value="">Select weapon...</option>';
+                
+                // Add weapon skills only (no top-level option)
+                character.skills.filter(s => s.type === 'weapon').forEach(weapon => {
+                    parentSelect.innerHTML += `<option value="${weapon.id}">${weapon.name}</option>`;
+                });
+                
+            } else {
+                // Hide parent selection for other skill types
+                parentDiv.style.display = 'none';
+            }
+        }
+
+        // Update health bar
+        function updateHealthBar() {
+            const current = parseInt(document.getElementById('currentHealth').value) || 0;
+            const max = parseInt(document.getElementById('maxHealth').value) || 100;
+            const percentage = Math.max(0, Math.min(100, (current / max) * 100));
+            
+            const healthBar = document.getElementById('healthBar');
+            healthBar.style.width = percentage + '%';
+            healthBar.textContent = percentage.toFixed(0) + '%';
+            
+            if (percentage > 60) {
+                healthBar.style.background = 'linear-gradient(90deg, #4CAF50, #66BB6A)';
+            } else if (percentage > 30) {
+                healthBar.style.background = 'linear-gradient(90deg, #FFA726, #FFB74D)';
+            } else {
+                healthBar.style.background = 'linear-gradient(90deg, #ff6b6b, #ff8787)';
+            }
+        }
+
+        // Render skills list
+        function renderSkills() {
+            const container = document.getElementById('skillsList');
+            if (!container) {
+                console.error('ERROR: skillsList container not found');
+                return;
+            }
+            
+            console.log('renderSkills() called with skills:', character.skills.length, character.skills);
+            
+            container.innerHTML = '';
+            
+            // Separate skills by type
+            const magicalDomains = character.skills.filter(s => s.type === 'domain' && !s.parent && s.magical !== false);
+            const weaponSkills = character.skills.filter(s => s.type === 'weapon');
+            const generalSkills = character.skills.filter(s => s.type === 'skill' && !s.parent);
+            const alchemyDomain = character.skills.filter(s => s.type === 'domain' && s.name.toLowerCase().includes('alchemy'));
+            
+            console.log('Skill counts:', {
+                magicalDomains: magicalDomains.length,
+                weaponSkills: weaponSkills.length,
+                generalSkills: generalSkills.length,
+                alchemyDomain: alchemyDomain.length
+            });
+            
+            // Render magical domains
+            magicalDomains.forEach(domain => renderDomain(domain, container));
+            
+            // Render alchemy separately
+            alchemyDomain.forEach(domain => renderDomain(domain, container, true));
+            
+            // Render weapon skills
+            weaponSkills.forEach(weapon => renderWeaponSkill(weapon, container));
+            
+            // Render general skills
+            if (generalSkills.length > 0) {
+                const generalDiv = document.createElement('div');
+                generalDiv.className = 'skill-domain non-magical';
+                generalDiv.innerHTML = '<div class="domain-header"><span class="domain-name">General Skills</span></div>';
+                
+                generalSkills.forEach(skill => {
+                    const xpNeeded = calculateXPNeeded(skill.level, skill.name);
+                    const xpPercentage = (skill.xp / xpNeeded) * 100;
+                    
+                    // Add custom skill indicator for general skills
+                    const customIndicator = skill.custom ? 
+                        '<span style="background: #17a2b8; color: white; padding: 1px 4px; border-radius: 8px; font-size: 0.65em; margin-left: 3px;">Custom</span>' : 
+                        '';
+                    
+                    const skillDiv = document.createElement('div');
+                    skillDiv.className = 'skill-item';
+                    skillDiv.innerHTML = `
+                        <div class="skill-info">
+                            <span><strong>${skill.name}</strong>${createInfoIcon(skill.name, 'skill')}${customIndicator}</span>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span class="skill-level">Level ${skill.level}</span>
+                                <button class="delete-button" onclick="deleteSkill('${skill.id}')">×</button>
+                            </div>
+                        </div>
+                        <div class="skill-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${xpPercentage}%"></div>
+                            </div>
+                            <span>${skill.xp.toFixed(2)}/${xpNeeded} XP</span>
+                            <button class="xp-button" onclick="showXPModal('${skill.id}')">+XP</button>
+                        </div>
+                    `;
+                    generalDiv.appendChild(skillDiv);
+                });
+                
+                container.appendChild(generalDiv);
+            }
+            
+            // Update mana display
+            updateMana();
+            
+            // Update training selects
+            updateTrainingSelects();
+        }
+
+        // Render a domain and its children
+        function renderDomain(domain, container, isAlchemy = false) {
+            const domainDiv = document.createElement('div');
+            domainDiv.className = 'skill-domain';
+            if (isAlchemy) domainDiv.className += ' alchemy-domain';
+            if (!domain.magical) domainDiv.className += ' non-magical';
+            
+            const xpNeeded = calculateXPNeeded(domain.level, domain.name);
+            const xpPercentage = (domain.xp / xpNeeded) * 100;
+            
+            // Add custom skill indicator for all custom skills
+            const customIndicator = domain.custom ? 
+                '<span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.75em; margin-left: 5px;">Custom</span>' : 
+                '';
+            
+            const illegalWarning = domain.illegal ? 
+                '<span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.75em; margin-left: 5px;">ILLEGAL</span>' : 
+                '';
+            
+            domainDiv.innerHTML = `
+                <div class="domain-header">
+                    <span class="domain-name">
+                        ${domain.name} 
+                        ${isAlchemy ? '(Alchemy - No Mana)' : ''}
+                        ${createInfoIcon(domain.name, 'domain')}
+                        ${customIndicator}
+                        ${illegalWarning}
+                    </span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="skill-level">Level ${domain.level}</span>
+                        <span class="tier-info">${getTierName(domain.level)}</span>
+                        <button class="delete-button" onclick="deleteSkill('${domain.id}')">×</button>
+                    </div>
+                </div>
+                <div class="skill-progress">
+                    <div class="progress-bar" style="flex: 1;">
+                        <div class="progress-fill" style="width: ${xpPercentage}%"></div>
+                    </div>
+                    <span>${domain.xp.toFixed(2)}/${xpNeeded} XP</span>
+                    <button class="xp-button" onclick="showXPModal('${domain.id}')">+XP</button>
+                </div>
+                ${domain.description ? `<div style="font-size: 0.9em; color: #666; margin-top: 5px; font-style: italic;">${domain.description}</div>` : ''}
+            `;
+            
+            // Add illegal styling
+            if (domain.illegal) {
+                domainDiv.style.border = '2px solid #dc3545';
+                domainDiv.style.backgroundColor = '#fff5f5';
+            }
+            
+            // Add children (spells/sub-domains)
+            const children = character.skills.filter(s => s.parent === domain.id);
+            children.forEach(child => {
+                const childXpNeeded = calculateXPNeeded(child.level, child.name);
+                const childXpPercentage = (child.xp / childXpNeeded) * 100;
+                
+                const childDiv = document.createElement('div');
+                childDiv.className = child.type === 'domain' ? 'sub-skill' : 'skill-item';
+                
+                // Add custom and illegal indicators for all custom child skills
+                const childCustomIndicator = child.custom ? 
+                    '<span style="background: #17a2b8; color: white; padding: 1px 4px; border-radius: 8px; font-size: 0.65em; margin-left: 3px;">Custom</span>' : 
+                    '';
+                const childIllegalWarning = child.illegal ? 
+                    '<span style="background: #dc3545; color: white; padding: 1px 4px; border-radius: 8px; font-size: 0.65em; margin-left: 3px;">ILLEGAL</span>' : 
+                    '';
+                
+                childDiv.innerHTML = `
+                    <div class="skill-info">
+                        <span>
+                            <strong>${child.name}</strong> 
+                            ${child.type === 'domain' ? '(Sub-domain)' : ''}
+                            ${createInfoIcon(child.name, child.type, domain.name.toLowerCase().replace(/ /g, ''))}
+                            ${childCustomIndicator}
+                            ${childIllegalWarning}
+                        </span>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span class="skill-level">Level ${child.level}</span>
+                            <button class="delete-button" onclick="deleteSkill('${child.id}')">×</button>
+                        </div>
+                    </div>
+                    ${child.description ? `<div style="font-size: 0.8em; color: #666; margin: 3px 0; font-style: italic;">${child.description}</div>` : ''}
+                    <div class="skill-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${childXpPercentage}%"></div>
+                        </div>
+                        <span>${child.xp.toFixed(2)}/${childXpNeeded} XP</span>
+                        <button class="xp-button" onclick="showXPModal('${child.id}')">+XP</button>
+                    </div>
+                `;
+                domainDiv.appendChild(childDiv);
+            });
+            
+            container.appendChild(domainDiv);
+        }
+
+        // Render weapon skill and its techniques
+        function renderWeaponSkill(weapon, container) {
+            const weaponDiv = document.createElement('div');
+            weaponDiv.className = 'skill-domain weapon-domain';
+            
+            const xpNeeded = calculateXPNeeded(weapon.level, weapon.name);
+            const xpPercentage = (weapon.xp / xpNeeded) * 100;
+            
+            // Add custom skill indicator for weapons
+            const customIndicator = weapon.custom ? 
+                '<span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.75em; margin-left: 5px;">Custom</span>' : 
+                '';
+            
+            weaponDiv.innerHTML = `
+                <div class="domain-header">
+                    <span class="domain-name">${weapon.name} (Weapon)${createInfoIcon(weapon.name, 'weapon')}${customIndicator}</span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="skill-level">Level ${weapon.level}</span>
+                        <span class="tier-info">${getTierName(weapon.level)}</span>
+                        <button class="delete-button" onclick="deleteSkill('${weapon.id}')">×</button>
+                    </div>
+                </div>
+                <div class="skill-progress">
+                    <div class="progress-bar" style="flex: 1;">
+                        <div class="progress-fill" style="width: ${xpPercentage}%"></div>
+                    </div>
+                    <span>${weapon.xp.toFixed(2)}/${xpNeeded} XP</span>
+                    <button class="xp-button" onclick="showXPModal('${weapon.id}')">+XP</button>
+                </div>
+            `;
+            
+            // Add combat techniques for this weapon
+            const techniques = character.skills.filter(s => s.parent === weapon.id && s.type === 'combat');
+            techniques.forEach(technique => {
+                const techXpNeeded = calculateXPNeeded(technique.level, technique.name);
+                const techXpPercentage = (technique.xp / techXpNeeded) * 100;
+                
+                // Check if this technique exists for other weapons
+                const otherWeaponsWithTechnique = character.skills.filter(s => 
+                    s.name === technique.name && 
+                    s.type === 'combat' && 
+                    s.id !== technique.id
+                );
+                
+                const techDiv = document.createElement('div');
+                techDiv.className = 'skill-item';
+                
+                // Add custom skill indicator for techniques
+                const techniqueCustomIndicator = technique.custom ? 
+                    '<span style="background: #17a2b8; color: white; padding: 1px 4px; border-radius: 8px; font-size: 0.65em; margin-left: 3px;">Custom</span>' : 
+                    '';
+
+                techDiv.innerHTML = `
+                    <div class="skill-info">
+                        <span><strong>${technique.name}</strong>
+                            ${createInfoIcon(technique.name, 'combat', weapon.name.toLowerCase().replace(/ /g, ''))}
+                            ${technique.reaction ? '<span class="skill-type-badge">Reaction</span>' : ''}
+                            ${techniqueCustomIndicator}
+                            ${otherWeaponsWithTechnique.length > 0 ? 
+                                `<span class="shared-skill-indicator">Also in ${otherWeaponsWithTechnique.length} other weapon(s)</span>` : ''}
+                        </span>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span class="skill-level">Level ${technique.level}</span>
+                            <button class="delete-button" onclick="deleteSkill('${technique.id}')">×</button>
+                        </div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${techXpPercentage}%"></div>
+                        </div>
+                        <span>${technique.xp.toFixed(2)}/${techXpNeeded} XP</span>
+                        <button class="xp-button" onclick="showXPModal('${technique.id}')">+XP</button>
+                    </div>
+                `;
+                weaponDiv.appendChild(techDiv);
+            });
+            
+            container.appendChild(weaponDiv);
+        }
+
+        // Update mana display
+        function updateMana() {
+            const maxMana = calculateMana();
+            document.getElementById('maxMana').textContent = maxMana;
+            document.getElementById('currentMana').textContent = maxMana;
+            document.getElementById('manaRegen').textContent = (maxMana * 0.3).toFixed(1); // 30% in Cyoria
+        }
+
+        // Delete skill
+        function deleteSkill(skillId) {
+            // Protect free starting skills from deletion
+            const protectedSkills = ['shaping', 'conjuration', 'magic_missile_conjuration', 'negation'];
+            const skill = character.skills.find(s => s.id === skillId);
+            
+            if (skill && protectedSkills.includes(skill.id)) {
+                alert('Cannot delete free starting skills (Shaping, Conjuration, Magic Missile, or Negation)');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete this skill?')) {
+                // Remove the skill and any children
+                character.skills = character.skills.filter(s => s.id !== skillId && s.parent !== skillId);
+                renderSkills();
+                saveCharacter();
+            }
+        }
+
+        // Show XP modal
+        let currentXPSkill = null;
+        function showXPModal(skillId) {
+            currentXPSkill = character.skills.find(s => s.id === skillId);
+            if (!currentXPSkill) return;
+            
+            const modal = document.getElementById('addXPModal');
+            modal.style.display = 'flex';
+            
+            const xpNeeded = calculateXPNeeded(currentXPSkill.level, currentXPSkill.name);
+            
+            // For weapon techniques, show which weapon this is for
+            let extraInfo = '';
+            if (currentXPSkill.type === 'combat' && currentXPSkill.parent) {
+                const parentWeapon = character.skills.find(s => s.id === currentXPSkill.parent);
+                if (parentWeapon) {
+                    extraInfo = `<p style="color: #666; font-size: 0.9em;">For: ${parentWeapon.name}</p>`;
+                }
+            }
+            
+            document.getElementById('xpSkillInfo').innerHTML = `
+                <p><strong>${currentXPSkill.name}</strong></p>
+                ${extraInfo}
+                <p>Current Level: ${currentXPSkill.level} (${getTierName(currentXPSkill.level)})</p>
+                <p>Current XP: ${currentXPSkill.xp}/${xpNeeded}</p>
+            `;
+            
+            // Show Shaping bonus info if applicable
+            const shapingBonus = document.getElementById('shapingBonus');
+            if (currentXPSkill.name.toLowerCase() === 'shaping') {
+                shapingBonus.style.display = 'block';
+                shapingBonus.innerHTML = '✨ Shaping has reduced XP requirements (50% of normal)';
+            } else {
+                shapingBonus.style.display = 'none';
+            }
+            
+            document.getElementById('xpAmount').value = '';
+        }
+
+        // Apply XP
+        function applyXP() {
+            if (!currentXPSkill) return;
+            
+            const xpInput = document.getElementById('xpAmount').value;
+            if (!xpInput) return;
+            
+            // Parse as float to support decimals
+            const xpToAdd = parseFloat(xpInput);
+            if (isNaN(xpToAdd) || xpToAdd <= 0) {
+                alert('Please enter a valid positive number for XP.');
+                return;
+            }
+            
+            // Save state for undo
+            saveStateForUndo(`Added ${xpToAdd} XP to ${currentXPSkill.name}`);
+            
+            const oldLevel = currentXPSkill.level;
+            currentXPSkill.xp += xpToAdd;
+            
+            // Check for level up (keeping XP as decimal)
+            let xpNeeded = calculateXPNeeded(currentXPSkill.level, currentXPSkill.name);
+            let levelsGained = 0;
+            
+            while (currentXPSkill.xp >= xpNeeded) {
+                currentXPSkill.xp -= xpNeeded;
+                currentXPSkill.level++;
+                levelsGained++;
+                xpNeeded = calculateXPNeeded(currentXPSkill.level, currentXPSkill.name);
+            }
+            
+            renderSkills();
+            closeXPModal();
+            saveCharacter();
+            
+            // Show level up notification if applicable
+            if (levelsGained > 0) {
+                updateAutoSaveStatus(
+                    `${currentXPSkill.name} gained ${levelsGained} level${levelsGained > 1 ? 's' : ''} ` +
+                    `(${oldLevel} → ${currentXPSkill.level})`
+                );
+            } else {
+                updateAutoSaveStatus(`Added ${xpToAdd} XP to ${currentXPSkill.name}`);
+            }
+        }
+
+        // Update training selects
+        function updateTrainingSelects() {
+            const selects = ['training1', 'training2', 'training3', 'training4', 'training5'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">None</option>';
+                
+                // Create comprehensive groups that capture ALL skills
+                const groups = {
+                    'Magical Domains': character.skills.filter(s => s.type === 'domain' && s.magical !== false),
+                    'Non-Magical Domains': character.skills.filter(s => s.type === 'domain' && s.magical === false),
+                    'Spells': character.skills.filter(s => s.type === 'spell'),
+                    'Weapons': character.skills.filter(s => s.type === 'weapon'),
+                    'Combat Techniques': character.skills.filter(s => s.type === 'combat'),
+                    'General Skills': character.skills.filter(s => s.type === 'skill'),
+                    'Other Skills': character.skills.filter(s => 
+                        s.type && !['domain', 'spell', 'weapon', 'combat', 'skill'].includes(s.type)
+                    )
+                };
+                
+                // Debug logging to verify all skills are captured
+                console.log(`Updating ${selectId}:`, {
+                    totalSkills: character.skills.length,
+                    groupCounts: Object.entries(groups).map(([name, skills]) => 
+                        `${name}: ${skills.length}`
+                    ).join(', '),
+                    ungroupedSkills: character.skills.filter(s => 
+                        !Object.values(groups).some(group => group.includes(s))
+                    ).map(s => `${s.name} (type: ${s.type}, magical: ${s.magical})`)
+                });
+                
+                Object.entries(groups).forEach(([groupName, skills]) => {
+                    if (skills.length > 0) {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = groupName;
+                        
+                        skills.forEach(skill => {
+                            const option = document.createElement('option');
+                            option.value = skill.id;
+                            
+                            // For combat techniques, show which weapon they belong to
+                            if (skill.type === 'combat' && skill.parent) {
+                                const parent = character.skills.find(s => s.id === skill.parent);
+                                option.textContent = `${skill.name} (${parent ? parent.name : 'Unknown'})`;
+                            } else {
+                                option.textContent = skill.name;
+                            }
+                            
+                            optgroup.appendChild(option);
+                        });
+                        
+                        select.appendChild(optgroup);
+                    }
+                });
+                
+                // Restore previous selection if it still exists
+                select.value = currentValue;
+            });
+        }
+
+        // Apply loop training
+        function applyLoopTraining() {
+            const training = [
+                { id: document.getElementById('training1').value, xp: 8 },
+                { id: document.getElementById('training2').value, xp: 5 },
+                { id: document.getElementById('training3').value, xp: 3 },
+                { id: document.getElementById('training4').value, xp: 3 },
+                { id: document.getElementById('training5').value, xp: 3 }
+            ];
+            
+            training.forEach(t => {
+                if (t.id) {
+                    const skill = character.skills.find(s => s.id === t.id);
+                    if (skill) {
+                        skill.xp += t.xp;
+                        
+                        // Check for level up
+                        let xpNeeded = calculateXPNeeded(skill.level, skill.name);
+                        while (skill.xp >= xpNeeded) {
+                            skill.xp -= xpNeeded;
+                            skill.level++;
+                            xpNeeded = calculateXPNeeded(skill.level, skill.name);
+                        }
+                    }
+                }
+            });
+            
+            renderSkills();
+            saveCharacter();
+            alert('Loop training applied successfully!');
+        }
+
+        // Close modals
+        function closeModal() {
+            document.getElementById('addSkillModal').style.display = 'none';
+        }
+
+        function closeXPModal() {
+            document.getElementById('addXPModal').style.display = 'none';
+            currentXPSkill = null;
+        }
+
+        // Save character
+        // Auto-save functionality
+        let autoSaveInterval;
+
+        function startAutoSave() {
+            // Clear old undo history on startup
+            actionHistory = [];
+            updateUndoUI();
+            
+            // Auto-save every 30 seconds
+            autoSaveInterval = setInterval(() => {
+                saveCharacterData();
+                updateAutoSaveStatus('Auto-saved at ' + new Date().toLocaleTimeString());
+                
+                // Clear old undo history (older than 10 minutes)
+                const tenMinutesAgo = Date.now() - (10 * 60 * 1000);
+                actionHistory = actionHistory.filter(action => action.timestamp > tenMinutesAgo);
+                updateUndoUI();
+            }, 30000);
+            
+            // Update undo UI time stamps every 10 seconds
+            setInterval(updateUndoUI, 10000);
+        }
+
+        function updateAutoSaveStatus(message) {
+            const status = document.getElementById('autoSaveStatus');
+            if (status) {
+                status.textContent = message;
+                status.style.color = '#4CAF50';
+                // Reset color after 3 seconds
+                setTimeout(() => {
+                    status.style.color = '#666';
+                    status.textContent = 'Auto-saves every 30 seconds';
+                }, 3000);
+            }
+        }
+
+        // Enhanced save character function
+        function saveCharacter() {
+            character.name = document.getElementById('characterName').value;
+            character.currentHealth = parseInt(document.getElementById('currentHealth').value);
+            character.bloodline = document.getElementById('bloodline').value;
+            character.knowledge = document.getElementById('knowledge').value;
+            character.lastModified = new Date().toISOString();
+            
+            // Auto-save to localStorage
+            saveCharacterData();
+        }
+
+        // Save character data to localStorage
+        function saveCharacterData() {
+            try {
+                const characterData = {
+                    ...character,
+                    lastModified: new Date().toISOString()
+                };
+                
+                // Save current character
+                localStorage.setItem('molCharacter', JSON.stringify(characterData));
+                
+                // Save to saved characters list if character has a name
+                if (character.name && character.name.trim()) {
+                    saveNamedCharacterToList(characterData);
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Failed to save character:', error);
+                alert('Failed to save character data. Your browser may have storage limitations.');
+                return false;
+            }
+        }
+
+        // Save character to the saved characters list
+        function saveNamedCharacterToList(characterData) {
+            try {
+                const savedCharacters = JSON.parse(localStorage.getItem('molSavedCharacters') || '[]');
+                const characterName = characterData.name.trim();
+                
+                // Remove existing character with same name
+                const filteredCharacters = savedCharacters.filter(char => char.name !== characterName);
+                
+                // Add updated character
+                filteredCharacters.push({
+                    name: characterName,
+                    data: characterData,
+                    savedAt: new Date().toISOString()
+                });
+                
+                // Keep only last 10 saved characters
+                const limitedCharacters = filteredCharacters.slice(-10);
+                
+                localStorage.setItem('molSavedCharacters', JSON.stringify(limitedCharacters));
+            } catch (error) {
+                console.error('Failed to save character to list:', error);
+            }
+        }
+
+        // Load character data from localStorage
+        function loadCharacterData() {
+            try {
+                const saved = localStorage.getItem('molCharacter');
+                if (saved) {
+                    const characterData = JSON.parse(saved);
+                    
+                    // Merge saved data with current character
+                    Object.assign(character, characterData);
+                    
+                    // Update UI
+                    updateCharacterUI();
+                    renderSkills();
+                    updateHealthBar();
+                    
+                    updateAutoSaveStatus('Character loaded from browser storage');
+                    return true;
+                }
+            } catch (error) {
+                console.error('Failed to load character:', error);
+                alert('Failed to load character data. Starting with default character.');
+            }
+            
+            // If no saved data or error, initialize defaults
+            if (character.skills.length === 0) {
+                initializeDefaultSkills();
+            }
+            return false;
+        }
+
+        // Update character UI elements
+        function updateCharacterUI() {
+            document.getElementById('characterName').value = character.name || '';
+            document.getElementById('currentHealth').value = character.currentHealth || 100;
+            document.getElementById('bloodline').value = character.bloodline || '';
+            document.getElementById('knowledge').value = character.knowledge || '';
+        }
+
+        // Show load character modal
+        function showLoadCharacterModal() {
+            const modal = document.getElementById('loadCharacterModal');
+            modal.style.display = 'flex';
+            
+            // Populate saved characters list
+            populateSavedCharactersList();
+        }
+
+        function closeLoadCharacterModal() {
+            document.getElementById('loadCharacterModal').style.display = 'none';
+        }
+
+        // Populate saved characters list
+        function populateSavedCharactersList() {
+            const container = document.getElementById('savedCharactersList');
+            const savedCharacters = JSON.parse(localStorage.getItem('molSavedCharacters') || '[]');
+            
+            if (savedCharacters.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">No saved characters found</div>';
+                return;
+            }
+            
+            container.innerHTML = savedCharacters.map(saved => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 5px; background-color: white;">
+                    <div>
+                        <strong>${saved.name}</strong>
+                        <div style="font-size: 0.8em; color: #666;">
+                            Saved: ${new Date(saved.savedAt).toLocaleString()}
+                            ${saved.data.skills ? `• ${saved.data.skills.length} skills` : ''}
+                            ${saved.data.currentHealth ? `• ${saved.data.currentHealth} HP` : ''}
+                        </div>
+                    </div>
+                    <button class="add-skill-button" onclick="loadSavedCharacter('${saved.name.replace(/'/g, "\\'")}')">Load</button>
+                </div>
+            `).join('');
+        }
+
+        // Load saved character by name
+        function loadSavedCharacter(characterName) {
+            const savedCharacters = JSON.parse(localStorage.getItem('molSavedCharacters') || '[]');
+            const savedCharacter = savedCharacters.find(char => char.name === characterName);
+            
+            if (savedCharacter) {
+                // Load the character data
+                Object.assign(character, savedCharacter.data);
+                
+                // Update UI
+                updateCharacterUI();
+                renderSkills();
+                updateHealthBar();
+                
+                // Close modal
+                closeLoadCharacterModal();
+                
+                updateAutoSaveStatus(`Loaded character: ${characterName}`);
+            } else {
+                alert('Character not found!');
+            }
+        }
+
+        // Save character to file
+        function saveCharacterToFile() {
+            if (!character.name || !character.name.trim()) {
+                alert('Please enter a character name before saving.');
+                return;
+            }
+            
+            // Update character data first
+            saveCharacter();
+            
+            const characterData = {
+                ...character,
+                exportedAt: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataStr = JSON.stringify(characterData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `${character.name.replace(/[^a-z0-9]/gi, '_')}_character.json`;
+            link.click();
+            
+            updateAutoSaveStatus('Character exported to file');
+        }
+
+        // Export character as JSON (for sharing/backup)
+        function exportCharacterJSON() {
+            if (!character.name || !character.name.trim()) {
+                alert('Please enter a character name before exporting.');
+                return;
+            }
+            
+            // Update character data first
+            saveCharacter();
+            
+            const characterData = {
+                ...character,
+                exportedAt: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataStr = JSON.stringify(characterData, null, 2);
+            
+            // Create modal with JSON content
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">Character JSON Export</div>
+                    <textarea readonly style="width: 100%; height: 300px; font-family: monospace; font-size: 12px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 6px; resize: vertical;">${dataStr}</textarea>
+                    <div style="margin: 10px 0; font-size: 0.9em; color: #666;">
+                        Copy this JSON data to share your character or create a backup.
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="cancel-button" onclick="document.body.removeChild(this.closest('.modal'))">Close</button>
+                        <button class="add-button" onclick="copyJSONToClipboard(this, '${dataStr.replace(/'/g, "\\'")}')">Copy to Clipboard</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function copyJSONToClipboard(button, jsonData) {
+            navigator.clipboard.writeText(jsonData).then(function() {
+                button.textContent = 'Copied!';
+                button.style.background = '#4CAF50';
+                setTimeout(() => {
+                    button.textContent = 'Copy to Clipboard';
+                    button.style.background = '';
+                }, 2000);
+            }).catch(function() {
+                // Fallback for older browsers
+                alert('Unable to copy automatically. Please select and copy the text manually.');
+            });
+        }
+
+        // Load character from file
+        function loadCharacterFromFile() {
+            const fileInput = document.getElementById('characterFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a character file first.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const characterData = JSON.parse(e.target.result);
+                    console.log('Loaded character data:', characterData);
+                    
+                    // Enhanced validation with better error messages
+                    if (typeof characterData !== 'object' || characterData === null) {
+                        alert('Invalid character file: data is not a valid object.');
+                        return;
+                    }
+                    
+                    // Set default values for missing properties
+                    const validatedData = {
+                        name: characterData.name || '',
+                        currentHealth: characterData.currentHealth || 100,
+                        maxHealth: characterData.maxHealth || 100,
+                        bloodline: characterData.bloodline || '',
+                        skills: Array.isArray(characterData.skills) ? characterData.skills : [],
+                        knowledge: characterData.knowledge || ''
+                    };
+                    
+                    console.log('Validated character data:', validatedData);
+                    
+                    // Load the character
+                    Object.assign(character, validatedData);
+                    
+                    // Update UI
+                    updateCharacterUI();
+                    renderSkills();
+                    updateHealthBar();
+                    
+                    closeLoadCharacterModal();
+                    
+                    const characterName = character.name || 'Unnamed Character';
+                    updateAutoSaveStatus(`Loaded character from file: ${characterName}`);
+                    
+                } catch (error) {
+                    console.error('Detailed load error:', error);
+                    console.error('File content:', e.target.result);
+                    alert(`Failed to load character file: ${error.message}\n\nPlease check the browser console for more details.`);
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+
+        // Clear all saved data (for testing/reset)
+        function clearAllSavedData() {
+            if (confirm('This will delete all saved characters and reset to defaults. Are you sure?')) {
+                localStorage.removeItem('molCharacter');
+                localStorage.removeItem('molSavedCharacters');
+                
+                // Reset current character
+                character = {
+                    name: '',
+                    currentHealth: 100,
+                    maxHealth: 100,
+                    bloodline: '',
+                    skills: [],
+                    knowledge: ''
+                };
+                
+                initializeDefaultSkills();
+                updateCharacterUI();
+                renderSkills();
+                updateHealthBar();
+                
+                updateAutoSaveStatus('All data cleared - reset to defaults');
+            }
+        }
+
+        // Load character
+        function loadCharacter() {
+            // Try to load from localStorage first
+            const loaded = loadCharacterData();
+            
+            if (!loaded) {
+                // Fallback to defaults if no saved data
+                updateCharacterUI();
+                if (character.skills.length === 0) {
+                    initializeDefaultSkills();
+                }
+            }
+            
+            renderSkills();
+            updateHealthBar();
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('currentHealth').addEventListener('input', function() {
+                updateHealthBar();
+                saveCharacter();
+            });
+
+            document.getElementById('characterName').addEventListener('input', saveCharacter);
+            document.getElementById('bloodline').addEventListener('input', saveCharacter);
+            document.getElementById('knowledge').addEventListener('input', saveCharacter);
+            
+            document.getElementById('skillType').addEventListener('change', updateParentSelect);
+            
+            // Search functionality
+            const searchBox = document.getElementById('skillSearch');
+            if (searchBox) {
+                searchBox.addEventListener('input', (e) => {
+                    const activeTab = document.querySelector('.tab-content.active').id;
+                    if (activeTab === 'magical-tab') {
+                        renderMagicalSkills(e.target.value);
+                    } else if (activeTab === 'combat-tab') {
+                        renderCombatSkills(e.target.value);
+                    } else if (activeTab === 'general-tab') {
+                        renderGeneralSkills(e.target.value);
+                    }
+                });
+            }
+
+            // Close modals on outside click
+            window.onclick = function(event) {
+                if (event.target.className === 'modal') {
+                    event.target.style.display = 'none';
+                }
+            }
+
+            // Initialize
+            loadCharacter();
+            updateHealthBar();
+            
+            // Start auto-save system
+            startAutoSave();
+            
+            // Save when page is about to unload
+            window.addEventListener('beforeunload', function(e) {
+                saveCharacterData();
+            });
+        });
+    </script>
+</body>
+</html>
