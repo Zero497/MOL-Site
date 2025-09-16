@@ -1,0 +1,103 @@
+/* Responsive Design */
+
+/* Tablet and smaller screens */
+@media (max-width: 968px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    body {
+        padding: 15px;
+    }
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.8em;
+    }
+    
+    .loop-info {
+        font-size: 1em;
+    }
+    
+    body {
+        padding: 10px;
+    }
+    
+    .card {
+        padding: 15px;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .info-row label {
+        min-width: auto;
+    }
+    
+    .tabs {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .tab {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        margin: 20px;
+        width: calc(100% - 40px);
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5em;
+    }
+    
+    .skill-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .weapon-selector {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .training-slot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+/* Color variations for different skill domains */
+.non-magical {
+    border-left-color: #9e9e9e !important;
+}
+
+.alchemy-domain {
+    border-left-color: #ff9800 !important;
+}
+
+.weapon-domain {
+    border-left-color: #8b4513 !important;
+}
+
+.illegal-domain {
+    border-left-color: #dc3545 !important;
+    background-color: #fff5f5 !important;
+}

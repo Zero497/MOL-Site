@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mother of Learning - Campaign Tracker</title>
+    
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mother of Learning - Campaign Tracker</h1>
+            <div class="loop-info" id="loopInfo">Loop 4, Week 2, Day 5</div>
+        </div>
+
+        <div class="main-grid">
+            <div class="card character-info">
+                <h2>Character Information</h2>
+                
+                <div class="info-row">
+                    <label>Name:</label>
+                    <input type="text" id="characterName" placeholder="Enter character name">
+                </div>
+
+                <div class="info-row">
+                    <label>Health:</label>
+                    <input type="number" id="currentHealth" value="100" max="100" min="-40">
+                    <span>/</span>
+                    <input type="number" id="maxHealth" value="100" readonly>
+                </div>
+
+                <div class="health-bar">
+                    <div class="health-fill" id="healthBar">100%</div>
+                </div>
+
+                <div class="info-row">
+                    <label>Bloodline:</label>
+                    <input type="text" id="bloodline" placeholder="e.g., Pyromancy talent (1.5x progress, 2x sub-skills)">
+                </div>
+
+                <div class="info-row">
+                    <label>Character:</label>
+                    <div style="display: flex; gap: 10px; flex: 1; flex-wrap: wrap;">
+                        <button class="add-button" onclick="createNewCharacter()" style="margin: 0; padding: 8px 16px; background: #17a2b8;">New Character</button>
+                        <button class="add-button" onclick="saveCharacterToFile()" style="margin: 0; padding: 8px 16px;">Save to File</button>
+                        <button class="add-button" onclick="saveCharacterToSlot()" style="margin: 0; padding: 8px 16px;">Save Character</button>
+                        <button class="add-button" onclick="showLoadCharacterModal()" style="margin: 0; padding: 8px 16px;">Load Character</button>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <label></label>
+                    <div style="font-size: 0.8em; color: #666; font-style: italic;" id="autoSaveStatus">
+                        Auto-saves every 30 seconds
+                    </div>
+                </div>
+
+                <div class="mana-display">
+                    <div>Total Mana: <span id="totalMana">100</span></div>
+                    <div style="font-size: 0.8em; margin-top: 5px;">Based on Shaping skill level</div>
+                </div>
+
+                <div class="loop-training">
+                    <h3>Loop Training Progress</h3>
+                    <div class="training-slot">
+                        <label>Primary (8 XP):</label>
+                        <select id="training1"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Secondary (5 XP):</label>
+                        <select id="training2"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Tertiary 1 (3 XP):</label>
+                        <select id="training3"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Tertiary 2 (3 XP):</label>
+                        <select id="training4"></select>
+                    </div>
+                    <div class="training-slot">
+                        <label>Tertiary 3 (3 XP):</label>
+                        <select id="training5"></select>
+                    </div>
+                    <button class="add-button" onclick="applyLoopTraining()">Apply Loop Training</button>
+                </div>
+
+                <!-- Undo System Section -->
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #856404;">Recent Actions</strong>
+                            <div id="undoText" style="font-size: 0.8em; color: #856404; margin-top: 3px;">
+                                No recent actions
+                            </div>
+                        </div>
+                        <button id="undoButton" class="add-button" onclick="undoLastAction()" 
+                                style="background: #ffc107; color: #212529; margin: 0; padding: 6px 12px;" disabled>
+                            Undo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card skills-section">
+                <h2>Skills & Spells</h2>
+                
+                <div class="button-group" style="margin-bottom: 15px;">
+                    <button class="add-button" onclick="switchTab('magical'); document.getElementById('skillBrowserModal').style.display='flex'">Browse & Add Skills</button>
+                    <button class="add-button" onclick="showCustomSkillModal()">Create Custom Skill</button>
+                </div>
+
+                <div id="skillsList"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Knowledge & Notes</h2>
+            <textarea id="knowledge" style="width: 100%; height: 150px; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;" placeholder="Enter character knowledge, backstory notes, and campaign information here..."></textarea>
+        </div>
+    </div>
+
+    <!-- Skill Browser Modal -->
+    <div id="skillBrowserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Browse Skills & Spells</div>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('magical')">Magical</button>
+                <button class="tab" onclick="switchTab('combat')">Combat & Weapons</button>
+                <button class="tab" onclick="switchTab('general')">General Skills</button>
+            </div>
+            
+            <div class="tab-content active" id="magical">
+                <input type="text" class="search-box" id="magicalSearch" placeholder="Search magical skills and spells...">
+                <div id="magicalSkills"></div>
+            </div>
+            
+            <div class="tab-content" id="combat">
+                <input type="text" class="search-box" id="combatSearch" placeholder="Search combat skills and techniques...">
+                <div class="weapon-selector">
+                    <label>Filter by Weapon:</label>
+                    <select id="weaponSelector">
+                        <option value="">All Weapons</option>
+                    </select>
+                </div>
+                <div id="combatSkills"></div>
+            </div>
+            
+            <div class="tab-content" id="general">
+                <input type="text" class="search-box" id="generalSearch" placeholder="Search general skills...">
+                <div id="generalSkills"></div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="document.getElementById('skillBrowserModal').style.display='none'">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Skill Modal -->
+    <div id="customSkillModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">Create Custom Skill</div>
+            
+            <form id="customSkillForm">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Skill Name:</label>
+                    <input type="text" name="skillName" placeholder="Enter skill name" style="width: 100%;" required>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Starting Level:</label>
+                        <input type="number" name="skillLevel" min="-3" max="10" value="0" step="1" style="width: 100%;">
+                        <div style="font-size: 0.8em; color: #666; margin-top: 3px;">Range: -3 to 10</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Skill Type:</label>
+                    <select name="skillType" style="width: 100%;">
+                        <optgroup label="Magical">
+                            <option value="domain">Magical Domain</option>
+                            <option value="spell">Spell/Sub-skill</option>
+                        </optgroup>
+                        <optgroup label="Non-Magical">
+                            <option value="skill">General Skill</option>
+                            <option value="combat">Combat Technique</option>
+                            <option value="weapon">Weapon Proficiency</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Description (Optional):</label>
+                    <textarea name="skillDescription" placeholder="Enter skill description..." 
+                              style="width: 100%; height: 60px; resize: vertical; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-family: inherit;"></textarea>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Special Properties:</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" name="magical" style="width: auto; margin: 0;"> Magical
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" name="illegal" style="width: auto; margin: 0;"> Illegal
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeCustomSkillModal()">Cancel</button>
+                <button class="add-button" onclick="addCustomSkill()">Create Skill</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Character Modal -->
+    <div id="loadCharacterModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">Load Character</div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #667eea; margin-bottom: 10px;">Saved Characters</h4>
+                <div id="savedCharactersList" style="max-height: 200px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px; background-color: #f9f9f9;">
+                    <!-- Saved characters will be populated here -->
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #667eea; margin-bottom: 10px;">Import from File</h4>
+                <input type="file" id="loadCharacterFile" accept=".json" style="margin-bottom: 10px; width: 100%;">
+                <div style="font-size: 0.8em; color: #666;">Select a previously exported character JSON file</div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeLoadCharacterModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Description Modal -->
+    <div id="skillDescriptionModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header" id="skillDescriptionTitle">Skill Description</div>
+            <div id="skillDescriptionContent" style="max-height: 400px; overflow-y: auto; line-height: 1.6;">
+                <!-- Description content will be populated by JavaScript -->
+            </div>
+            <div class="modal-buttons">
+                <button class="add-button" onclick="closeSkillDescriptionModal()" style="width: 100%;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript Files -->
+    <script src="js/character.js"></script>
+    <script src="js/skills.js"></script>
+    <script src="js/spells.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

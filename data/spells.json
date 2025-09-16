@@ -1,0 +1,216 @@
+{
+  "domains": {
+    "shaping": { "name": "Shaping", "defaultLevel": 2, "description": "The ability to shape mana, a key element of magical practice", "magical": true, "free": true },
+    "conjuration": { "name": "Conjuration", "defaultLevel": 1, "description": "Creating ectoplasm and force constructs", "magical": true, "free": true },
+    "negation": { "name": "Negation", "defaultLevel": 1, "description": "The art of countering spells", "magical": true, "free": true },
+    "alteration": { "name": "Alteration", "defaultLevel": -1, "description": "Shifting the form of objects and terrain", "magical": true },
+    "animation": { "name": "Animation", "defaultLevel": 0, "description": "Animating objects by imbuing them with the casters will", "magical": true },
+    "cryomancy": { "name": "Cryomancy", "defaultLevel": 0, "description": "Sub-domain of alteration specializing in ice magic", "magical": true },
+    "divination": { "name": "Divination", "defaultLevel": -1, "description": "Information gathering magic, difficult but not mana intensive", "magical": true },
+    "electromancy": { "name": "Electromancy", "defaultLevel": 0, "description": "Sub-domain of Projection concerning electric energy", "magical": true },
+    "enhancement": { "name": "Enhancement", "defaultLevel": 0, "description": "Temporarily enhancing ones own body", "magical": true },
+    "golemancy": { "name": "Golemancy", "defaultLevel": -1, "description": "Creating mindless golems (requires Animation 3, Spell Formula 5)", "magical": true },
+    "illusion": { "name": "Illusion", "defaultLevel": 0, "description": "Creating illusions", "magical": true },
+    "medicalMagic": { "name": "Medical Magic", "defaultLevel": -1, "description": "Nascent field created after the Silence for diagnosis and treatment", "magical": true },
+    "mentalDefense": { "name": "Mental Defense", "defaultLevel": -1, "description": "Protection of the mind from outside influence", "magical": true },
+    "projection": { "name": "Projection", "defaultLevel": 0, "description": "Creating light, sound, heat, and electricity", "magical": true },
+    "pyromancy": { "name": "Pyromancy", "defaultLevel": 0, "description": "Summoning and controlling fire, sub-domain of Projection", "magical": true },
+    "spatialMagic": { "name": "Spatial Magic", "defaultLevel": -3, "description": "Manipulation of space and dimensions", "magical": true },
+    "spellFormula": { "name": "Spell Formula", "defaultLevel": -2, "description": "Inscribing spells into objects; enchanting", "magical": true },
+    "warding": { "name": "Warding", "defaultLevel": -1, "description": "Creating permanent or semi-permanent defenses in fixed locations", "magical": true },
+    "bloodMagic": { "name": "Blood Magic", "defaultLevel": -1, "description": "Illegal manipulation of life force", "magical": true, "illegal": true },
+    "mindMagic": { "name": "Mind Magic", "defaultLevel": -2, "description": "Illegal manipulation of minds", "magical": true, "illegal": true },
+    "necromancy": { "name": "Necromancy", "defaultLevel": -1, "description": "Illegal reanimation of corpses", "magical": true, "illegal": true },
+    "soulMagic": { "name": "Soul Magic", "defaultLevel": -3, "description": "Illegal sensing and manipulating souls", "magical": true, "illegal": true },
+    "alchemy": { "name": "Alchemy", "defaultLevel": 0, "description": "Field of magic requiring no shaping skills, involving potion creation", "magical": false, "alchemical": true }
+  },
+  "spells": {
+    "conjuration": [
+      { "name": "Magic Missile", "defaultLevel": 0, "description": "A basic damaging bolt of magical force. Mana Cost: 4+2 per Level. Cast Time: 50-5 per Tier TU (min 5). Range: 60+10 per Level feet. Damage: 15+7.5 per Level Blunt", "free": true },
+      { "name": "Force Shield", "defaultLevel": 0, "description": "Transparent shield of magical force. Reaction. Mana Cost: 1-0.05 per Level per damage blocked (min 0.05). Max damage blocked: 10 per Level" },
+      { "name": "Aegis", "defaultLevel": -1, "description": "Full dome shield of magical force. Channeled. Requires Conjuration Level 5. Mana Cost: 0.85-0.1 per Level per damage blocked (min 0.03). Cast Time: 50-10 per Tier TU (min 3). Range: 5+5 per Tier feet. Radius: max 2.5 per Tier feet" },
+      { "name": "Floating Disc", "defaultLevel": 0, "description": "Simple plane of force to carry weight. Channeled. Mana Cost: 20/Hour. Cast Time: 200 TU. Range: 5 feet. Carry: 100+75 per Tier pounds. Speed: 4+3 per Tier. Radius: 3+1 per Tier feet (max 8)" },
+      { "name": "Force Lance", "defaultLevel": -1, "description": "Powerful piercing force attack. Mana Cost: 15+5 per Level. Cast Time: 80-8 per Tier TU (min 8). Range: 100+15 per Level feet. Damage: 30+15 per Level Piercing. Special: Reduces Force Shield/Aegis Level by 2+1 per Tier" },
+      { "name": "Force Whip", "defaultLevel": 0, "description": "Conjured whips of magical force. Channeled. Takes 3 Channel slots. Mana Cost: 17+8 per Tier. Cast Time: 80-8 per Tier. Range: 10 feet. Damage: 16+7 per Level (slashing/piercing/blunt choice). Attack every 40-2 per Tier TU" },
+      { "name": "Simulacrum", "defaultLevel": -1, "description": "Create autonomous copy sharing soul and mana. Channeled. Requires Soul Magic Level 3. Mana Cost: 25/Hour. Cast Time: 600 TU. Range: 5 feet" },
+      { "name": "Static Force Shield", "defaultLevel": 0, "description": "Force Shield variant with initial mana investment instead of ongoing cost. Acts as Enhancer for Force Shield Checks equal to or less than this Skills Level" }
+    ],
+    "negation": [
+      { "name": "Basic Dispelling Wave", "defaultLevel": 0, "description": "Projects disruptive magic wave. Mana Cost: 10+5 per Level. Cast Time: 50-10 per Tier TU (min 10). Cone: 10+5 per Tier feet long, 5+2.5 per Tier feet wide. Non-channeled spells use only spell Level to resist" },
+      { "name": "Targeted Dispel", "defaultLevel": -2, "description": "Disrupt casting of specific spell. Mana Cost: 40% of target spell cost+2 per Tier. Cast Time: 50-10 per Tier TU (min 5). Range: 30+10 per Level feet. Must complete at most 5 TU before target spell. Contested Check" }
+    ],
+    "alteration": [
+      { "name": "Create Mud Men", "defaultLevel": 0, "description": "Create and control mud people. Channeled, Vulnerable. Requires Alteration Level 3, Animation Level 4. Mana Cost: 10 per mud man. Cast Time: 100+50 per additional TU-10 per Level (min 15). Range: 10 feet. Max: 1 per Tier. Possess all users unarmed Skills" },
+      { "name": "Instant Pit", "defaultLevel": 0, "description": "Creates pit in earth. Mana Cost: 5. Cast Time: 20-2 per Level TU (min 2). Range: 30+10 per Tier feet" },
+      { "name": "Raise Earthen Bindings", "defaultLevel": 0, "description": "Earth rises to entangle enemies. Mana Cost: 8+3 per Level per binding. Cast Time: 30-4 per Tier TU (min 4)+15-2 per Tier per extra binding (min 2). Range: 50+15 per Level feet. Bind 1 per Tier. Binding Health: 15+5 per Level. Armor: 8+2 per Tier True, 10 Lightning" },
+      { "name": "Raise Earthen Spears", "defaultLevel": 0, "description": "Earth spears up at enemies. Mana Cost: 5+2.25 per Level per spear. Cast Time: 100-8 per Tier TU (min 10). Range: 30+5 per Level feet. Create 1 per Tier. Damage: 18+4 per Level Piercing, 8+2.5 per Level Blunt per spear" },
+      { "name": "Raise Earthen Wall", "defaultLevel": 0, "description": "Creates wall of dirt and stone. Cast Time: 80-10 per Tier TU (min 8). Range: 30+5 per Level feet. Dimensions: 5+3 per Tier width, 10+5 per Level length, 10+2 per Level height. Health per 5ft segment: 50+15 per Level. Armor: 12+3 per Tier True, 10 Lightning" }
+    ],
+    "animation": [
+      { "name": "Homing Magic Missile", "defaultLevel": 0, "description": "Magic Missile variation with homing effect. Acts as Enhancer to Magic Missile Skill when making contested check" },
+      { "name": "Puppeteer", "defaultLevel": -1, "description": "Puppeteer a target. Channeled, Vulnerable. Requires Animation Level 2. Level 4 for unwilling targets. Mana Cost: 25/Hour unresisted or 25/600 TU resisted. Cast Time: 100-10 per Tier TU (min 8). Range: 10+10 per Tier feet. Target cannot cast magic, uses casters Skills" }
+    ],
+    "bloodMagic": [
+      { "name": "Blood for Mana", "defaultLevel": -1, "description": "Convert lifeforce to mana. Extremely damaging to health. Rate: 2+0.5 per Level times Health spent. Causes damage that cannot be repaired until end of loop" },
+      { "name": "Last Breath", "defaultLevel": -1, "description": "Use lifeforce of dying/dead to cast spell. Range: 10+10 per Tier feet. Up to 2 per Tier characters dead within 5 min or at 0 Health. Each supplies 15% of max Health as mana. Living targets die. Check difficulty: 1/6 of mana supplied" }
+    ],
+    "cryomancy": [
+      { "name": "Ice Shards", "defaultLevel": 0, "description": "Sharp icicles fired at enemies. Mana Cost: 2.5+1 per Level per icicle. Cast Time: 80-8 per Tier TU (min 8). Range: 40+8 per Level feet. Max icicles: 3+1 per Tier. Damage: 5+3 per Level Piercing, 3+1.5 per Level Cold. Can channel after cast" },
+      { "name": "Create Ice Construct", "defaultLevel": 0, "description": "Create simple ice construct. Mana Cost: 5 per cubic foot. Cast Time: 10-2 per Tier TU per cubic foot (min 0.5). Range: 10+5 per Tier feet. Max: 3+2 per Level cubic feet" },
+      { "name": "Ice Lance", "defaultLevel": 0, "description": "Massive sharp ice lance. Requires Cryomancy Level 3. Mana Cost: 15+5 per Level. Cast Time: 100-10 per Tier TU (min 10). Range: 50+10 per Level feet. Damage: 24+12 per Level Piercing, 8+4 per Level Cold. AP: 10+8 per Tier vs Physical" },
+      { "name": "Ice Coffin", "defaultLevel": 0, "description": "Form ice around target to freeze them. Channeled. Mana Cost: 7 per Tier per 10 TU. Cast Time: 100-10 per Tier TU (min 10). Range: 80+20 per Tier feet. Reduces Movement Speed by 0.25-0.5+0.25-0.5 per Tier initially and per 10 TU channeled" }
+    ],
+    "divination": [
+      { "name": "Locator", "defaultLevel": 0, "description": "Locate familiar people or objects. Mana Cost: 5 per Level. Cast Time: 600 TU. Radius: 1 mile per Level centered on caster" },
+      { "name": "Past Reconstruction", "defaultLevel": -1, "description": "Reconstruct immediate past of area. Mana Cost: 10 per Level. Cast Time: 2000 TU. Becomes more accurate and goes further back at higher Levels" }
+    ],
+    "electromancy": [
+      { "name": "Electric Armor", "defaultLevel": 0, "description": "Shroud self in electricity. Channeled. Mana Cost: 9+3 per Level per 40 TU. Cast Time: 40-6 per Tier TU. Every 10 TU: attack target within 10+5 per Tier feet for 4+1.5 per Level Electric damage. Also triggers as Reaction when attacked" },
+      { "name": "Lightning Strike", "defaultLevel": -1, "description": "Bolt of lightning. Mana Cost: 35+16 per Level. Cast Time: 110-11 per Tier TU (min 11). Range: 80+40 per Tier feet. Damage: 40+16 per Level Electric. Interrupts target by 15 TU" },
+      { "name": "Spark", "defaultLevel": 0, "description": "Bundle of electrical energy. Mana Cost: 11+3 per Level. Cast Time: 70-10 per Tier TU (min 5). Range: 25+3 per Level feet. Damage: 7+4 per Level Electric. Interrupts by 8 TU" }
+    ],
+    "enhancement": [
+      { "name": "Perception Enhancement", "defaultLevel": 0, "description": "Perceive supernaturally quickly. Channeled. Mana Cost: 10+6 per Level per 100 TU. Cast Time: 30-3 per Tier TU (min 3). Range: 8+8 per Tier feet. Acts as Enhancer for Reaction Checks" },
+      { "name": "Strength Enhancement", "defaultLevel": 0, "description": "Become supernaturally strong. Channeled. Mana Cost: 12+7 per Level per 100 TU. Cast Time: 40-4 per Tier TU (min 4). Range: 8+8 per Tier feet. Physical weapons +20% base damage +10% per Level. Unarmed +50% base +25% per Level" },
+      { "name": "Swiftness Enhancement", "defaultLevel": 0, "description": "Become supernaturally fast. Channeled. Mana Cost: 7+4 per Level per 100 TU. Cast Time: 20-2 per Tier TU (min 2). Range: 8+8 per Tier feet. +3-5 Movement Speed +2-4 per Level" }
+    ],
+    "golemancy": [
+      { "name": "Create Golem", "defaultLevel": -1, "description": "Create a golem. Power varies with Level, size, and materials. Requires substantial time, mana, and resources. Combat-grade materials restricted. Uses casters physical combat Skills" }
+    ],
+    "illusion": [
+      { "name": "Invisibility", "defaultLevel": -1, "description": "Make target invisible. Channeled. Mana Cost: 3 per Tier per 600 TU. Minor visual distortion decreases with Level. Ineffective vs smell/sound perception. Acts as Enhancer to Stealth Checks" }
+    ],
+    "medicalMagic": [
+      { "name": "Diagnose", "defaultLevel": -1, "description": "Determine what ails patient. Vulnerable. Sub-Skill of both Divination and Medical Magic. Mana Cost: 20. Cast Time: 3000-400 per Level TU (min 40)" },
+      { "name": "Heal", "defaultLevel": -2, "description": "Peak of medical magic, heal superficial wounds. Requires Medical Magic Level 5. Mana Cost: 30. Cast Time: 600 TU. Range: 5 feet. Heals max 15+5 per Tier Health. Cannot use twice on same target until fully healed" },
+      { "name": "Locate Pathogens", "defaultLevel": 0, "description": "Locate disease sources nearby. Sub-Skill of both Divination and Medical Magic. Mana Cost: 10+5 per Level. Cast Time: 600 TU. Radius: 1+0.5 per Level miles" }
+    ],
+    "mentalDefense": [
+      { "name": "Mind Blank", "defaultLevel": -2, "description": "Completely nullify Mind Magic influence. Channeled. Max Level 5. Requires Mental Defense Level 4. Mana Cost: 25/Hour. Cast Time: 600 TU. Auto-succeed vs Mind Magic. Causes paranoid delusions with extensive use" },
+      { "name": "Mind Shield", "defaultLevel": 0, "description": "Protect from Mind Magic. Channeled. Mana Cost: 10/Hour. Cast Time: 60-20 per Tier TU (min 5)" }
+    ],
+    "mindMagic": [
+      { "name": "Dominate", "defaultLevel": -2, "description": "Take control of targets mind. Channeled. Mana Cost: 40/Hour per Tier. Cast Time: 6000 TU. Range: 30 feet. Humans get +5 effective Mental Defense Level. Dominated must stay within 300 feet" },
+      { "name": "Mind Spike", "defaultLevel": 0, "description": "Simple mental attack disrupting focus. Mana Cost: 9+4 per Level. Cast Time: 60-10 per Tier TU (min 8). Range: 50+10 per Level feet. Target loses 6+3 per Level focus" },
+      { "name": "Read Memory", "defaultLevel": -2, "description": "Dive into targets memories. Channeled, Vulnerable. Both user and target unconscious. Mana Cost: 60/Hour. Cast Time: 6000 TU. Range: 5 feet. Higher Levels read older memories, bypass mental defenses" },
+      { "name": "Read Mind", "defaultLevel": 0, "description": "Read surface thoughts. Channeled, Subtle. Mana Cost: 10 per 1200 TU. Cast Time: 100-30 per Tier TU. Range: 20+10 per Level feet. Lower Levels more likely to fail/alert target" },
+      { "name": "Sleep", "defaultLevel": 0, "description": "Put target to sleep. Channeled, Vulnerable. Mana Cost: 15+5 per Tier per 30 TU. Cast Time: 120-20 per Tier TU (min 10). Range: 60+20 per Level feet. Target in magical sleep cannot wake while channeled" }
+    ],
+    "projection": [
+      { "name": "Magic Weapon", "defaultLevel": 0, "description": "Coat weapon in magic, changing damage type. Channeled. Mana Cost: 0.2 per damage dealt. Cast Time: 1 TU. Increases weapon damage by 10% per Level" },
+      { "name": "Heat Beam", "defaultLevel": 0, "description": "Focused beam of extreme heat. Mana Cost: 12+4 per Level. Cast Time: 40-4 per Tier TU (min 4). Range: 5+1 per Level feet. Damage: 15+7.5 per Level Heat" }
+    ],
+    "pyromancy": [
+      { "name": "Fireball", "defaultLevel": 0, "description": "Explosive fire spell. Requires Pyromancy Level 3. Mana Cost: 38+18 per Level. Cast Time: 120-12 per Tier TU (min 5). Range: 100+40 per Tier feet. Radius: 7.5+2.5 per Tier feet. Damage: 15+5 per Level Blunt, 10+5 per Level Heat" },
+      { "name": "Firebolt", "defaultLevel": 0, "description": "Simple fiery projectile. Mana Cost: 7+2 per Level. Cast Time: 50-5 per Tier TU (min 2). Range: 40+6 per Level feet. Damage: 7+5 per Level Fire" },
+      { "name": "Flamethrower", "defaultLevel": 0, "description": "Spill flame from hands. Channeled, Focused. Mana Cost: 8+4 per Level per 10 TU. Cast Time: 30-4 per Tier TU (min 3). Cone: 8+4 per Tier width, 12+6 per Tier length (2:3 ratio). Damage: 6+3 per Level Fire per 10 TU or when moving through" }
+    ],
+    "shaping": [
+      { "name": "Mana Field", "defaultLevel": -2, "description": "Spread mana net for perception. Channeled. Mana Cost: 4+2 per Tier per 300 TU. Cast Time: 5-1 per Tier TU (min 1). Range: 10+5 per Level feet. Perceive everything in area including wards and spell effects" },
+      { "name": "Mana Sense", "defaultLevel": -2, "description": "Sense mana flows detecting wards and effects. Requires Shaping Level 3, Perception Level 4. Range: 20 feet per Level. Higher Levels yield higher sensitivity" },
+      { "name": "Multicasting", "defaultLevel": -2, "description": "Form multiple spells at once. Requires Shaping Level 5. Cast up to 2 spells +1 at Adept +1 at Grandmaster. +1 more with Vulnerable tag. Check difficulty: spell Level*(1.5+0.5 per successive spell). Must have Level 4+ in each spell beyond first" }
+    ],
+    "spatialMagic": [
+      { "name": "Blink", "defaultLevel": -3, "description": "Quick short range teleport. Requires Spatial Magic Level 3. Mana Cost: 20+5 per Level. Cast Time: 50-5 per Level TU (min 3). Range: 50+20 per Level feet (+100 per Level above 7)" },
+      { "name": "Blink Other", "defaultLevel": -2, "description": "Use Blink to move targets. Objects <100+50 per Tier lbs. Characters get contested Check to resist +3 effective Levels, may apply full Shaping" },
+      { "name": "Dimensional Gate", "defaultLevel": -2, "description": "Portal linking two points via pocket dimension. Channeled, Vulnerable. Requires Spatial Magic Level 6. Mana Cost: 1000/Hour. Cast Time: 600 TU. Line of sight only unless synchronized by two casters" },
+      { "name": "Recall", "defaultLevel": 0, "description": "Teleport to pre-prepared anchor. Mana Cost: 30. Cast Time: 100-10 per Level TU. Range: 5 miles per Level. Bring 1 per Tier people in contact" },
+      { "name": "Reactive Blink", "defaultLevel": -1, "description": "Use Blink as Reaction if castable in <10 TU. Only Reactive Blink Level used for contested Check to avoid attack" },
+      { "name": "Reactive Spatial Manipulation", "defaultLevel": -3, "description": "Create small zones of expanded/shrunken space as Reaction. Max radius reduced by factor of 5. Acts as Enhancer to Reaction Skills. Cost minimum: 10 mana. Max Tier when casting = Reactive Spatial Manipulation Tier. Contested Check to cast in time" },
+      { "name": "Spatial Expansion/Reduction", "defaultLevel": -2, "description": "Create zone of expanded/contracted space. Channeled. Mana Cost: 5-0.5 per Tier (min 1) per foot radius per 10 TU. Cast Time: 100-10 per Tier TU (min 1). Max radius: 3+2 per Level feet. Range: 50+25 per Tier feet. Space multiplied/divided by 3+1 per Tier factor. Collapse damage: 3*radius*ceiling(TU open/30) Blunt in 2*radius*ceiling(TU open/50) area" },
+      { "name": "Teleportation", "defaultLevel": -1, "description": "Move to familiar location. Vulnerable. Requires Spatial Magic Level 3, Divination Level 3. Mana Cost: 100+30 per Level. Cast Time: 600-100 per Tier TU (min 50). Range: 50 miles per Level. Bring 1 per Tier people/equivalent mass within 10 feet" }
+    ],
+    "spellFormula": [
+      { "name": "Explosive Glyph", "defaultLevel": 0, "description": "Glyph that explodes when mana channeled. Must be physically inscribed. Mana Cost: 50 per Level. Cast Time: 6000 TU. Activate range: 10+5 per Level feet in 5 TU. Damage: 50+25 per Level Blunt in 10+5 per Level area" }
+    ],
+    "warding": [
+      { "name": "Alarm Ward", "defaultLevel": 0, "description": "Trigger alarm or mental notification. Channeled, Vulnerable. Can trigger other wards. Mana Cost: 5 per Level. Cast Time: 3000 TU. Max radius: 10+5 per Tier feet" },
+      { "name": "Anti-Shaping Ward", "defaultLevel": -2, "description": "Limit ability to shape mana. Channeled, Vulnerable. Mana Cost: 100 per Level. Cast Time: 36000 TU. Max radius: 15+10 per Level feet. Reduces effective Shaping by 1 per Ward Level. Daily upkeep = ward cost" },
+      { "name": "Explosive Ward", "defaultLevel": 0, "description": "Ward designed to explode on condition. Mana Cost: 50 per Level. Cast Time: 6000 TU. Damage: 50+25 per Level Blunt in 10+5 per Level area" },
+      { "name": "Ward Breaking", "defaultLevel": -1, "description": "Break targeted ward. Channeled, Vulnerable. Knowledge of ward makes easier. Mana Cost: 5 per ward Level. Cast time varies by ward Level and user Skill" }
+    ],
+    "alchemy": [
+      { "name": "Create Alchemists Fire", "defaultLevel": 0, "description": "Molotov explosive fiery concoction. Radius: 10+5 per Tier feet. Damage: 10+4 per Tier Blunt, 10+4 per Tier Fire. Burning residue: 8+4 per Tier Fire/25 TU. GP: 15d/25c/60c/120b/200a" },
+      { "name": "Create Healing Potion", "defaultLevel": -1, "description": "Healing potion for quick wound repair. Requires Alchemy Level 5. Heals 20 Health per Tier. GP: 20d/40d/70c/120c/160c" },
+      { "name": "Create Healing Salve", "defaultLevel": 0, "description": "Basic salve preventing infection and improving recovery. Max Level 1. GP: 0d" },
+      { "name": "Create Potion of Armor", "defaultLevel": 0, "description": "Protection against specific damage type. Requires Alchemy Level 4. Duration: 2 hours. Improves Armor by 4 per Level. Each type separate skill. GP: 1d/10d/20c/50c/100b" },
+      { "name": "Create Potion of Mental Acuity", "defaultLevel": -1, "description": "Process information faster for study/research/combat. Duration: 10 min per Tier. GP: 10c/40c/80b/140b/200a" },
+      { "name": "Create Potion of Strength", "defaultLevel": 0, "description": "Makes imbiber substantially stronger. Duration: 1 hour. Physical weapons +20% base +10% per Level. Unarmed +50% base +25% per Level. May break unenhanced weapons. GP: 8d/30c/60c/100b/160b" },
+      { "name": "Create Potion of Swiftness", "defaultLevel": 0, "description": "Improves movement speed. Duration: 1 hour. +2/4 Movement Speed per Tier. GP: 5d/20d/35d/60d/90c" },
+      { "name": "Create Pyre Coating", "defaultLevel": -1, "description": "Sticky substance heating when exposed to air. Duration: 1 hour. +15% heat damage per Tier. Burning: 3*Tier. May melt weapon. GP: 25c/45c/90c/130b/250a" },
+      { "name": "Create Smoke Bomb", "defaultLevel": 0, "description": "Obscure area with smoke. Duration: 1800 TU. Radius: 10+5 per Level feet. Stealth +2+1 per Level in area. GP: 0d/0d/3c/20c/50c" },
+      { "name": "Create Transformation Potion", "defaultLevel": -1, "description": "Transform into creature whose organs were used. Requires Alchemy Level 2 (Level 4+ for magical creatures). Duration: 1 hour per Tier. Ingredients: 1 corpse per 4+ doses. GP: 10+c+ depending on creature" },
+      { "name": "Create Poison", "defaultLevel": 0, "description": "Magical poison via contact/wound. Efficacy varies with Skill Level and ingredient quality. Variable ingredients and GP cost" },
+      { "name": "Create Poison Gas", "defaultLevel": -1, "description": "Bottle of magical poison gas. Efficacy varies with Skill Level and ingredient quality. Variable ingredients and GP cost" },
+      { "name": "Debilitating Gas", "defaultLevel": 0, "description": "Thick gray gas causing disorientation/nausea. Radius: 10 feet per Tier. -2 effective total Level per Tier in gas. Effect lasts 1 hour if in gas 200+ TU. GP: 10c/20c/40c/80b" },
+      { "name": "Dreambane Poison", "defaultLevel": 0, "description": "Causes fitful sleep. Applied by imbibing/injecting/weapon. Sleep after 500/350/200 TU by tier. GP: 10c/40c/100c" },
+      { "name": "Miasmora Toxin", "defaultLevel": 0, "description": "Fast-acting magical poison gas. Black color. Radius: 15+10 per Tier feet. 5+5 per Tier poison damage per 100 TU for 2000 TU. Half movement speed. +5 Stealth in smog. Double difficulty to create vs target level. GP: 40b/80b/160a" },
+      { "name": "Viridia Poison", "defaultLevel": 0, "description": "Simple fast-acting cutting poison. 5 poison damage per 250/125 TU for 6000 TU by tier. GP: 5c/10c" }
+    ]
+  },
+  "weaponSkills": {
+    "swords": { "name": "Swords", "defaultLevel": 0, "description": "The user is experienced in wielding swords. Domain Skill for Skills used with swords", "enhancer": true },
+    "daggers": { "name": "Daggers", "defaultLevel": 0, "description": "The user is skilled in wielding daggers to deadly effect. Acts as Enhancer to melee Skills used with daggers and knives. Reduces Time by 10% per Tier", "enhancer": true, "timeReduction": true },
+    "clubs": { "name": "Clubs", "defaultLevel": 0, "description": "The user knows how best to hurt people with a big stick. Acts as Enhancer to Skills used with clubs, maces, and warhammers", "enhancer": true },
+    "axes": { "name": "Axes", "defaultLevel": 0, "description": "The user is experienced with axes and hatchets. Acts as Enhancer to Skills used with axes", "enhancer": true },
+    "shields": { "name": "Shields", "defaultLevel": 0, "description": "The user is skilled in defensive and offensive shield use. Acts as Enhancer to Skills used with shields", "enhancer": true },
+    "bows": { "name": "Bows", "defaultLevel": 0, "description": "The user is deadly accurate with bows and crossbows. Acts as Enhancer to Skills used with bows and crossbows", "enhancer": true },
+    "throwing": { "name": "Throwing", "defaultLevel": 0, "description": "The user is Skilled in accurately hurling objects. Domain Skill for throwing attacks", "enhancer": true },
+    "unarmed": { "name": "Unarmed Combat", "defaultLevel": 0, "description": "The user is experienced in fighting with naught but their own body. Enhancer to physical melee Skills used without weapon. +10% +5% per Level base damage. Base human unarmed: 10 Blunt", "enhancer": true, "damageBonus": true }
+  },
+  "combatTechniques": {
+    "stab": { "name": "Stab", "defaultLevel": 0, "description": "The user attacks with a piercing melee weapon. Time: 40-4 per Level TU (min 4). Damage: 70% weapon (Piercing)+17.5% per Tier", "applicableWeapons": ["swords", "daggers"], "time": "40-4/Level", "damage": "70%+17.5%/Tier" },
+    "slash": { "name": "Slash", "defaultLevel": 0, "description": "The user attacks with a slashing weapon. Time: 65-6.5 per Level TU (min 6.5). Damage: 90% weapon (Slashing)+20% per Tier", "applicableWeapons": ["swords", "axes"], "time": "65-6.5/Level", "damage": "90%+20%/Tier" },
+    "bludgeon": { "name": "Bludgeon", "defaultLevel": 0, "description": "The user hits a target with a blunt weapon. Time: 90-8 per Level TU (min 8). Damage: 145% weapon (blunt)+35% per Tier", "applicableWeapons": ["clubs"], "time": "90-8/Level", "damage": "145%+35%/Tier" },
+    "overheadSlash": { "name": "Overhead Slash", "defaultLevel": 0, "description": "The user makes a massive overhead strike with a slashing weapon. Time: 120-12 per Level TU (min 12). Damage: 160% weapon (Slashing)+40% per Tier", "applicableWeapons": ["swords", "axes"], "time": "120-12/Level", "damage": "160%+40%/Tier" },
+    "cleave": { "name": "Cleave", "defaultLevel": 0, "description": "The user makes a wide slash with their weapon. Time: 80-8 per Level TU (min 8). Damage: 75% weapon (Slashing)+18% per Tier. Hits any number of targets in front of the user within an ~135 degree arc", "applicableWeapons": ["swords", "axes"], "time": "80-8/Level", "damage": "75%+18%/Tier", "aoe": true },
+    "nick": { "name": "Nick", "defaultLevel": 0, "description": "The user makes an extremely quick strike with a slashing or piercing melee weapon. Time: 10-1 per Level TU (min 1). Damage: 40% weapon (Piercing)+10% per Tier", "applicableWeapons": ["swords", "daggers"], "time": "10-1/Level", "damage": "40%+10%/Tier" },
+    "hiltStrike": { "name": "Hilt Strike", "defaultLevel": 0, "description": "The user strikes with the hilt of their weapon. Time: 10-1 per Level TU (min 1). Damage: 6 Blunt damage+2.5 per Tier", "applicableWeapons": ["swords", "daggers"], "time": "10-1/Level", "damage": "6+2.5/Tier" },
+    "knock": { "name": "Knock", "defaultLevel": 0, "description": "The user uses their fist or a blunt weapon to attempt to knock the target prone. Time: 80-6 per Level TU. Damage: 85% weapon (blunt)+20% per Tier. If this attack deals damage equal to at least 20% of the targets Health, the target is knocked prone", "applicableWeapons": ["clubs", "unarmed"], "time": "80-6/Level", "damage": "85%+20%/Tier", "knockdown": true },
+    "parry": { "name": "Parry", "defaultLevel": 0, "description": "The user knows how to deflect incoming attacks. Reaction. Only works on attacks with a Physical component. Can only fully negate attacks with total damage ≤8 per Level. A successful Parry against higher damage will negate 20% of the damage, before Armor is applied", "applicableWeapons": ["swords"], "reaction": true, "mitigation": true },
+    "block": { "name": "Block", "defaultLevel": 0, "description": "The user blocks an attack with a shield or more durable part of their body. Reaction. Increases Armor against the attack by 30%+10% per Level above 1", "applicableWeapons": ["shields"], "reaction": true, "armorBonus": true },
+    "shieldBash": { "name": "Shield Bash", "defaultLevel": 0, "description": "Offensive strike with shield edge or boss. Time: 70-7 per Level TU (min 7). Damage: 120% shield damage (Blunt)+25% per Tier. Can interrupt enemy actions", "applicableWeapons": ["shields"], "time": "70-7/Level", "damage": "120%+25%/Tier", "interrupting": true },
+    "counterSlash": { "name": "Counter Slash", "defaultLevel": 0, "description": "The user attacks quickly with a slashing weapon as a counter attack. Time: Instant. Damage: 35% weapon (Slashing)+8% per Tier. Use upon successfully Parrying an attack. Increases Interruption from Parry by 10-1 per Level Time Units", "applicableWeapons": ["swords"], "instant": true, "counter": true },
+    "eviscerate": { "name": "Eviscerate", "defaultLevel": 0, "description": "The user uses a bladed weapon to inflict a bleeding gash on their target. Time: 45-4.5 per Level TU (min 4.5). Damage: 50% weapon (piercing)+15% per Tier. Inflicts a stack of Bleeding on the target on dealing damage", "applicableWeapons": ["swords", "daggers"], "bleeding": true },
+    "rendArmor": { "name": "Rend Armor", "defaultLevel": 0, "description": "The user attacks with a slashing weapon to exploit a weakness in a targets armor and create an opening for attack. Time: 60-6 per Level TU (min 6). Damage: 60% weapon (slashing)+15% per Tier. If at least 20% of the total damage of Rend Armor breaches the targets Armor, the targets Physical Armor is reduced by 3 per Tier until repaired. May be ineffective against certain armors", "applicableWeapons": ["swords", "axes"], "armorReduction": true },
+    "charge": { "name": "Charge", "defaultLevel": 0, "description": "The user sprints at an opponent and attacks with their fists or a melee weapon. Damage: 16% weapon damage (any Physical)+4.5% per Level above 1 per 11 feet of sprinting with a reasonably straight heading prior to use, maxing after 55 feet. Usable only when the user slows to normal speed from sprint. Time to use may be delayed indefinitely, in increments of 5 Time Units", "applicableWeapons": ["all"], "movement": true },
+    "shoulderCheck": { "name": "Shoulder Check", "defaultLevel": 0, "description": "The user slams into an opponent after sprinting. Ineffective on larger opponents. Damage: 5 Blunt base+3 Blunt per Level per 11 feet of sprinting with reasonably straight heading prior to use, maxing after 44 feet. If the user is substantially larger than the target, damage is increased by 50% and the target is knocked Prone. Deals 40% of damage to the user from recoil, before the 50% increase", "applicableWeapons": ["unarmed"], "movement": true, "recoil": true },
+    "blinkStrike": { "name": "Blink Strike", "defaultLevel": -1, "description": "The user strikes quickly with a melee weapon after coming out from the Blink Spell. Time: Instant. Damage: 20% weapon damage (any Physical)+5% per Tier above Novice", "applicableWeapons": ["all"], "instant": true, "magical": true },
+    "shootArrow": { "name": "Shoot Arrow", "defaultLevel": 0, "description": "The user loads/draws and fires an arrow from a bow or crossbow. Time: 80-6 per Level TU (min 8). Range: base. Damage: 100% weapon damage (Piercing)+12% per Level above 1", "applicableWeapons": ["bows"], "time": "80-6/Level", "damage": "100%+12%/Level" },
+    "throwDagger": { "name": "Throw Dagger", "defaultLevel": 0, "description": "The user can accurately throw their daggers to deadly effect. Time: 30-7 per Level TU (min 2). Range: 20+5 per Tier feet. Damage: 40% weapon damage (piercing)+10% per Tier", "applicableWeapons": ["daggers"], "time": "30-7/Level", "range": "20+5/Tier" },
+    "throwPotion": { "name": "Throw Potion", "defaultLevel": 0, "description": "The user can accurately throw potions, shattering them against surfaces or enemies to deadly effect. Time: 50-5 per Tier TU (min 5). Range: 20+10 per Level feet", "applicableWeapons": ["throwing"], "time": "50-5/Tier", "range": "20+10/Level" },
+    "unarmedStrike": { "name": "Unarmed Strike", "defaultLevel": 0, "description": "The user attacks with only their natural weapons. Time: 30-5 per Tier TU (min 6). Damage: 80% weapon damage (any physical)+12% per Level above 1", "applicableWeapons": ["unarmed"], "time": "30-5/Tier", "damage": "80%+12%/Level" }
+  },
+  "generalSkills": [
+    { "name": "Perception", "defaultLevel": 0, "description": "The user is experienced in detecting the hidden and unseen", "enhancer": true },
+    { "name": "Stealth", "defaultLevel": 0, "description": "The user knows how to quiet their steps and remain hidden", "enhancer": true },
+    { "name": "Survival", "defaultLevel": 0, "description": "Enhancer for wilderness survival Skills, such as foraging, fire starting, and hunting", "enhancer": true },
+    { "name": "Disease Analysis", "defaultLevel": -1, "description": "Advanced talent in identifying and tracking the progression of diseases, whether mundane or magical" },
+    { "name": "Evasive Maneuvers", "defaultLevel": 0, "description": "The user is skilled in avoiding incoming attacks. Reaction", "reaction": true, "combat": true },
+    { "name": "Focused Defense", "defaultLevel": 0, "description": "The user focuses purely on defending themselves. Time: 10-1 per Level TU (min 1). After being active for 10-1 per Level TU, may be used as an Enhancer to all Reaction Skills used", "defensive": true, "combat": true },
+    { "name": "Body Block", "defaultLevel": 1, "description": "The user attempts to interpose themselves between an attack and a nearby ally. Reaction. The user must make separate contested checks for Body Block and any mitigation attempts", "reaction": true, "protective": true, "combat": true },
+    { "name": "Dash", "defaultLevel": 0, "description": "The user knows how to run efficiently and has experience pushing their limits in a flat out sprint. Once per 300 Time Units, the user may increase their sprint speed by 50%+10% per Level above 1 for 15 Time Units+5 per Level above 1. Max Level 6", "movement": true, "combat": true, "maxLevel": 6 },
+    { "name": "Disease Resistant", "defaultLevel": 0, "description": "The holder is supernaturally resistant to disease", "obtainableByPractice": false, "positive": true },
+    { "name": "Physical Combat Ineptitude", "defaultLevel": 0, "description": "Negative Skill. The holder is untalented at physical combat and, thus, has a permanent penalty relating to it", "obtainableByPractice": false, "negative": true },
+    { "name": "Socially Inept", "defaultLevel": 0, "description": "Negative Skill. The holder is terrible in social situations. Roleplay only Skill", "obtainableByPractice": false, "negative": true },
+    { "name": "Fragile Constitution", "defaultLevel": 0, "description": "Negative Skill, causing the holder to be more susceptible to poison and disease", "obtainableByPractice": false, "negative": true },
+    { "name": "Hyperfocused Caster", "defaultLevel": 0, "description": "Negative Skill. The caster hyperfocuses when casting and has difficulty casting spells quickly as a result. Special: +10% to the cast time of spells during combat", "obtainableByPractice": false, "negative": true, "combatPenalty": true },
+    { "name": "Athletics", "defaultLevel": 0, "description": "Running, jumping, climbing, physical fitness" },
+    { "name": "Acrobatics", "defaultLevel": 0, "description": "Balance, tumbling, agility, complex movements" },
+    { "name": "Endurance", "defaultLevel": 0, "description": "Stamina, resilience, physical fortitude" },
+    { "name": "Investigation", "defaultLevel": 0, "description": "Find clues, analyze evidence, logical deduction" },
+    { "name": "Insight", "defaultLevel": 0, "description": "Read people, understand motivations, detect lies" },
+    { "name": "Concentration", "defaultLevel": 0, "description": "Maintain focus under stress, resist distraction" },
+    { "name": "Medicine", "defaultLevel": 0, "description": "Non-magical healing, first aid, anatomy knowledge" },
+    { "name": "Lockpicking", "defaultLevel": 0, "description": "Bypass mechanical locks and simple traps" },
+    { "name": "Sleight of Hand", "defaultLevel": 0, "description": "Pickpocketing, legerdemain, manual dexterity" },
+    { "name": "Crafting", "defaultLevel": 0, "description": "Create and repair mundane items and tools" },
+    { "name": "Animal Handling", "defaultLevel": 0, "description": "Train, calm, and work with animals" },
+    { "name": "Navigation", "defaultLevel": 0, "description": "Find your way, read maps, celestial navigation" },
+    { "name": "Forgery", "defaultLevel": 0, "description": "Create false documents and signatures" },
+    { "name": "Persuasion", "defaultLevel": 0, "description": "Convince and negotiate with others" },
+    { "name": "Deception", "defaultLevel": 0, "description": "Lies, misdirection, and false information" },
+    { "name": "Intimidation", "defaultLevel": 0, "description": "Frighten and coerce through threats" },
+    { "name": "Performance", "defaultLevel": 0, "description": "Entertain, distract, and captivate audiences" }
+  ]
+}

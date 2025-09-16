@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MOL Tracker Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 10px 0; padding: 10px; border-left: 4px solid #007bff; background: #f8f9fa; }
+        .success { border-color: #28a745; }
+        .error { border-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>MOL Campaign Tracker - Module Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(test, success, message = '') {
+            const div = document.createElement('div');
+            div.className = `test ${success ? 'success' : 'error'}`;
+            div.innerHTML = `<strong>${test}:</strong> ${success ? 'PASS' : 'FAIL'} ${message}`;
+            results.appendChild(div);
+        }
+        
+        // Test CSS loading
+        function testCSS() {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'css/main.css';
+            link.onload = () => addResult('CSS Loading', true, '- main.css loaded successfully');
+            link.onerror = () => addResult('CSS Loading', false, '- Failed to load main.css');
+            document.head.appendChild(link);
+        }
+        
+        // Test JSON loading
+        async function testJSON() {
+            try {
+                const response = await fetch('data/spells.json');
+                const data = await response.json();
+                const hasSpells = data.spells && Object.keys(data.spells).length > 0;
+                const hasDomains = data.domains && Object.keys(data.domains).length > 0;
+                addResult('JSON Data Loading', hasSpells && hasDomains, 
+                    `- Found ${Object.keys(data.spells || {}).length} spell categories and ${Object.keys(data.domains || {}).length} domains`);
+            } catch (error) {
+                addResult('JSON Data Loading', false, `- Error: ${error.message}`);
+            }
+        }
+        
+        // Test JavaScript module structure
+        function testJS() {
+            const scripts = [
+                'js/character.js',
+                'js/skills.js', 
+                'js/spells.js',
+                'js/storage.js',
+                'js/main.js'
+            ];
+            
+            let loaded = 0;
+            scripts.forEach(src => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => {
+                    loaded++;
+                    if (loaded === scripts.length) {
+                        // Test if classes are available
+                        setTimeout(() => {
+                            try {
+                                const hasClasses = typeof CharacterManager !== 'undefined' && 
+                                                 typeof SkillManager !== 'undefined' &&
+                                                 typeof SpellManager !== 'undefined' &&
+                                                 typeof StorageManager !== 'undefined';
+                                addResult('JavaScript Modules', hasClasses, '- All classes loaded successfully');
+                            } catch (e) {
+                                addResult('JavaScript Modules', false, `- Error: ${e.message}`);
+                            }
+                        }, 100);
+                    }
+                };
+                script.onerror = () => addResult('JavaScript Modules', false, `- Failed to load ${src}`);
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Run tests
+        addResult('Test Started', true, '- Running modularization tests...');
+        testCSS();
+        testJSON();
+        testJS();
+    </script>
+</body>
+</html>
